@@ -37,6 +37,9 @@ NOCAPTCHA = True
 # properly served.
 SITE_URL = '{siteurl}'
 
+STATIC_ROOT = ''
+STATIC_URL = '/static/'
+
 # Path to uploaded files
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 MEDIA_ROOT = {media_folder_path}
