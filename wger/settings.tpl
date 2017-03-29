@@ -39,9 +39,9 @@ NOCAPTCHA = True
 # properly served.
 SITE_URL = '{siteurl}'
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static-collected')
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static-collected')
 
 # Path to uploaded files
 # Absolute filesystem path to the directory that will hold user-uploaded files.
