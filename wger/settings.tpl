@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 
 from wger.settings_global import *
 
 # Use 'DEBUG = True' to get more details for server errors
 DEBUG = True
 TEMPLATES[0]['OPTIONS']['debug'] = True
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ADMINS = (
     ('Your name', 'your_email@example.com'),
@@ -37,8 +39,9 @@ NOCAPTCHA = True
 # properly served.
 SITE_URL = '{siteurl}'
 
-STATIC_ROOT = ''
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static-collected')
 
 # Path to uploaded files
 # Absolute filesystem path to the directory that will hold user-uploaded files.
