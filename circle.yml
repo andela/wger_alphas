@@ -9,9 +9,9 @@ dependencies:
 
 test:
     pre:
-        - python manage.py migrate
+        - python manage.py migrate --settings=wger.settings
     override:
-        - python manage.py test
+        - python manage.py test --settings=wger.settings
 deployment:
     staging:
         branch: develop
