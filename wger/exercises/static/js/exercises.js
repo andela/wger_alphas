@@ -92,3 +92,24 @@ function wgerDrawWeightLogChart(data, divId) {
     });
   }
 }
+
+$(document).ready(function(){
+    // on click activate modal
+    $(".theModal").click(function() {
+     //  get exercise id from the tag
+     var exerciseId = $(this).attr('id');
+     var title = $(this).text();
+     $.ajax({
+         url: "/exercise/" + exerciseId + "/detail_view/",
+         method: 'GET',
+         success: function(respose) {
+            // populate content to modal
+            $("#myModal .modal-dialog .modal-content #modal-title").text(title);
+            $("#myModal .modal-dialog .modal-content .modal-body").html(respose);
+            },
+            error: function(errors){
+              console.log(errors);
+            }
+        });
+    });
+});
