@@ -19,18 +19,20 @@ import logging
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
-from django.views.generic import UpdateView
+from django.views.generic import DeleteView, UpdateView
 
 from wger.core.models import DaysOfWeek
 from wger.manager.models import Workout, Day
 from wger.manager.forms import DayForm
-from wger.utils.generic_views import WgerFormMixin
+from wger.utils.generic_views import (
+    WgerFormMixin,
+    WgerDeleteMixin
+)
 
 
 logger = logging.getLogger(__name__)
@@ -114,14 +116,25 @@ class DayCreateView(DayView, CreateView):
         return context
 
 
-@login_required
-def delete(request, pk):
+class DayDeleteView(WgerDeleteMixin, LoginRequiredMixin, DeleteView):
     '''
-    Deletes the given day
+    Generic view to delete a workout day
     '''
-    day = get_object_or_404(Day, training__user=request.user, pk=pk)
-    day.delete()
-    return HttpResponseRedirect(reverse('manager:workout:view', kwargs={'pk': day.training_id}))
+    model = Day
+    fields = ('description',)
+    messages = ugettext_lazy('Successfully deleted')
+    form_action_urlname = 'manager:day:delete'
+
+    def get_context_data(self, **kwargs):
+        context = super(DayDeleteView, self).get_context_data(**kwargs)
+        context['form_action'] = reverse(
+            'manager:day:delete', kwargs={'pk': self.object.id})
+        context['title'] = _(u"Delete '{0}'?").format(self.object)
+
+        return context
+
+    def get_success_url(self):
+        return reverse('manager:workout:view', kwargs={'pk': self.object.training_id})
 
 
 @login_required
