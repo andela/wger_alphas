@@ -16,13 +16,17 @@
 
 import logging
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms.models import modelformset_factory, inlineformset_factory
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse_lazy
+from django.utils.translation import ugettext_lazy, ugettext as _
 from django.db import models
 from django.contrib.auth.decorators import login_required
+from django.views.generic import DeleteView
 
 from wger.manager.models import (
     Day,
@@ -37,6 +41,7 @@ from wger.manager.forms import (
 )
 from wger.utils.language import load_item_languages
 from wger.config.models import LanguageConfig
+from wger.utils.generic_views import WgerDeleteMixin
 
 logger = logging.getLogger(__name__)
 
@@ -149,22 +154,44 @@ def get_formset(request, exercise_pk, reps=Set.DEFAULT_SETS):
                    'exercise': exercise})
 
 
-@login_required
-def delete(request, pk):
+class SetDeleteView(WgerDeleteMixin, LoginRequiredMixin, DeleteView):
     '''
-    Deletes the given set
+    Generic view to delete a workout set
     '''
+    model = Set
+    fields = ('exercises',)
+    # success_url = reverse_lazy('manager:workout:view')
+    messages = ugettext_lazy('Successfully deleted')
+    form_action_urlname = 'manager:set:delete'
 
-    # Load the set
-    set_obj = get_object_or_404(Set, pk=pk)
+    def get_context_data(self, **kwargs):
+        context = super(SetDeleteView, self).get_context_data(**kwargs)
+        context['form_action'] = reverse(
+            'manager:set:delete', kwargs={'pk': self.object.id})
+        context['title'] = _(u"Delete '{0}'?").format(self.object)
 
-    # Check if the user is the owner of the object
-    if set_obj.get_owner_object().user == request.user:
-        set_obj.delete()
-        return HttpResponseRedirect(reverse('manager:workout:view',
-                                            kwargs={'pk': set_obj.get_owner_object().id}))
-    else:
-        return HttpResponseForbidden()
+        return context
+
+    def get_success_url(self):
+        return reverse('manager:workout:view', kwargs={'pk': self.object.exerciseday.training_id})
+
+
+# @login_required
+# def delete(request, pk):
+#     '''
+#     Deletes the given set
+#     '''
+
+#     # Load the set
+#     set_obj = get_object_or_404(Set, pk=pk)
+
+#     # Check if the user is the owner of the object
+#     if set_obj.get_owner_object().user == request.user:
+#         set_obj.delete()
+#         return HttpResponseRedirect(reverse('manager:workout:view',
+#                                             kwargs={'pk': set_obj.get_owner_object().id}))
+#     else:
+#         return HttpResponseForbidden()
 
 
 @login_required
