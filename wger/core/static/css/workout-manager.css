@@ -321,3 +321,23 @@ div.info a, div.info a:hover, div.info a:active{
     background-color: transparent;
 }
 
+#muscle-direction {
+    margin-top: 20px;
+    padding: 0 30px;
+    width: 200px;
+}
+
+#muscle-direction div {
+    cursor: pointer;
+    background: #eee;
+    border-radius: 3px;
+    width: 90px;
+    margin: 0 auto;
+    padding: 5px;
+    text-align: center;
+}
+
+#muscle-direction div:hover {
+    background: #ddd;
+}
+

@@ -48,10 +48,14 @@ function wgerHighlightMuscle(element) {
     'url(/static/images/muscles/muscular_system_' + isFront + '.svg)');
 
     if (isFront === 'front') {
+        $('#muscle-direction #set-front').hide();
+        $('#muscle-direction #set-back').show();
         $('.muscle-svg.back-muscle').hide();
         $('.muscle-svg.front-muscle').show();
     }
     else if (isFront === 'back'){
+        $('#muscle-direction #set-back').hide();
+        $('#muscle-direction #set-front').show();
         $('.muscle-svg.front-muscle').hide();
         $('.muscle-svg.back-muscle').show();
     }
@@ -115,9 +119,14 @@ function wgerShowMuscleDetails(element){
 function setMuscleDirection(direction){
     if (direction === 'front') {
         var muscles_direction = $("#muscle-system").attr('style').match(/\(\w+muscular_system_back.svg/);
-        console.log("dir: ", muscles_direction)
+        console.log("dir front: ", muscles_direction);
+    }
+    else if (direction === 'back') {
+        var muscles_direction = $("#muscle-system").attr('style').match(/\(\w+muscular_system_back.svg/);
+        console.log("dir back: ", muscles_direction)
     }
 }
+
 
 $(document).ready(function (){
     var path =  $('svg path');
@@ -127,5 +136,12 @@ $(document).ready(function (){
 
     path.click(function() {
         wgerShowMuscleDetails(this);
+    });
+
+    $('#muscle-direction #set-front').click(function(){
+        setMuscleDirection('front');
+    });
+    $('#muscle-direction #set-back').click(function() {
+        setMuscleDirection('back');
     });
 });
