@@ -104,6 +104,12 @@ function wgerShowMuscleDetails(element){
     var muscleId = divId.match(/\d+/)[0];
     var element2 = $('.muscle[data-target="muscle-' + muscleId + '"]')
     wgerHighlightMuscle(element2)
+
+    // Add on click trigger
+    $(element).click(function() {
+        $(element2).click();
+    });
+
 }
 
 function setMuscleDirection(direction){
@@ -116,6 +122,10 @@ function setMuscleDirection(direction){
 $(document).ready(function (){
     var path =  $('svg path');
     path.hover(function() {
+        wgerShowMuscleDetails(this);
+    });
+
+    path.click(function() {
         wgerShowMuscleDetails(this);
     });
 });
