@@ -138,7 +138,7 @@ patterns_day = [
         login_required(day.DayCreateView.as_view()),
         name='add'),
     url(r'(?P<pk>\d+)/delete/$',
-        day.delete,
+        login_required(day.DayDeleteView.as_view()),
         name='delete'),
     url(r'^(?P<id>\d+)/view/$',
         day.view,
@@ -157,7 +157,7 @@ patterns_set = [
         set.get_formset,
         name='get-formset'),  # Used by JS
     url(r'^(?P<pk>\d+)/delete$',
-        set.delete,
+        set.SetDeleteView,
         name='delete'),
     url(r'^(?P<pk>\d+)/edit/$',
         set.edit,

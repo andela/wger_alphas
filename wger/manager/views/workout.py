@@ -228,7 +228,7 @@ class WorkoutDeleteView(WgerDeleteMixin, LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(WorkoutDeleteView, self).get_context_data(**kwargs)
         context['form_action'] = reverse('manager:workout:delete', kwargs={'pk': self.object.id})
-        context['title'] = _(u'Delete {0}?').format(self.object)
+        context['title'] = _(u"Delete '{0}'?").format(self.object)
 
         return context
 
