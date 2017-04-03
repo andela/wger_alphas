@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Workout Manager.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 from django.contrib.auth.decorators import login_required
 
 from wger.manager.views import (
@@ -87,7 +87,7 @@ patterns_workout = [
         name='ical'),
     url(r'^(?P<id>\d+)/pdf/log/(?P<images>[01]+)/(?P<comments>[01]+)/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})$',
         pdf.workout_log,
-        name='pdf-log'), #JS!
+        name='pdf-log'),  # JS!
     url(r'^(?P<id>\d+)/pdf/log/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})$',
         pdf.workout_log,
         name='pdf-log'),
@@ -99,7 +99,7 @@ patterns_workout = [
         name='pdf-log'),
     url(r'^(?P<id>\d+)/pdf/table/(?P<images>[01]+)/(?P<comments>[01]+)/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})$',
         pdf.workout_view,
-        name='pdf-table'), #JS!
+        name='pdf-table'),  # JS!
     url(r'^(?P<id>\d+)/pdf/table/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})$',
         pdf.workout_view,
         name='pdf-table'),
@@ -157,7 +157,7 @@ patterns_set = [
         set.get_formset,
         name='get-formset'),  # Used by JS
     url(r'^(?P<pk>\d+)/delete$',
-        set.SetDeleteView,
+        set.SetDeleteView.as_view(),
         name='delete'),
     url(r'^(?P<pk>\d+)/edit/$',
         set.edit,
@@ -233,8 +233,6 @@ patterns_step = [
         schedule_step.StepDeleteView.as_view(),
         name='delete'),
 ]
-
-
 
 urlpatterns = [
    url(r'^', include(patterns_workout, namespace="workout")),
