@@ -78,6 +78,9 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
 
+    # SVG template tag
+    'svg',
+
     # Breadcrumbs
     'django_bootstrap_breadcrumbs',
 
@@ -279,7 +282,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'wger-cache',
-        'TIMEOUT': 30 * 24 * 60 * 60,  # Cache for a month
+        'TIMEOUT': 3,  # Cache for a month
     }
 }
 
@@ -312,6 +315,10 @@ THUMBNAIL_ALIASES = {
 #
 STATIC_ROOT = ''
 STATIC_URL = '/static/'
+SVG_DIRS = [
+    os.path.join(BASE_DIR, 'core/static/images/muscles/main')
+]
+print("SVG DIRS: ", SVG_DIRS)
 
 # The default is not DEBUG, override if needed
 # COMPRESS_ENABLED = True

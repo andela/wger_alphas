@@ -36,6 +36,20 @@ function wgerHighlightMuscle(element) {
   $('#muscle-system').css('background-image',
     'url(/static/images/muscles/main/muscle-' + muscleId + '.svg),' +
     'url(/static/images/muscles/muscular_system_' + isFront + '.svg)');
+
+    if (isFront === 'front') {
+        console.log("Front!!");
+        $('.muscle-svg.back-muscle').hide();
+        $('.muscle-svg.front-muscle').show();
+    }
+    else if (isFront === 'back'){
+        console.log("Back!");
+        $('.muscle-svg.front-muscle').hide();
+        $('.muscle-svg.back-muscle').show();
+    }
+  // Show the corresponding exercises
+  $('.exercise-list').hide();
+  $('#' + divId).show();
 }
 
 /*
@@ -75,7 +89,32 @@ function wgerDrawWeightLogChart(data, divId) {
       height: 200,
       legend: legend,
       target: '#svg-' + divId,
-      colors: ['#204a87', '#4e9a06', '#ce5c00', '#5c3566', '#2e3436', '8f5902', '#a40000']
+      colors: ['#204a87', '#4e9a06', '#ce5c00', '#5c3566', '#2e3436', '#8f5902', '#a40000']
     });
   }
 }
+
+function wgerShowMuscleDetails(element){
+    var divId = $(element).attr('class');
+    var muscleId = divId.match(/\d+/)[0];
+    var element2 = $('.muscle[data-target="muscle-' + muscleId + '"]')
+    wgerHighlightMuscle(element2)
+}
+
+function setMuscleDirection(direction){
+    if (direction === 'front') {
+        var muscles_direction = $("#muscle-system").attr('style').match(/\(\w+muscular_system_back.svg/);
+        console.log("dir: ", muscles_direction)
+    }
+}
+
+$(document).ready(function (){
+    // isFront = ($(element).data('isFront') === 'True') ? 'front' : 'back';
+    // divId = $(element).data('target');
+    // var muscleId = 3
+    // muscleId = divId.match(/\d+/);
+    var path =  $('svg path');
+    path.hover(function() {
+        wgerShowMuscleDetails(this);
+    });
+});

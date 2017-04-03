@@ -1,5 +1,5 @@
 {% extends "base_wide.html" %}
-{% load i18n staticfiles cache wger_extras %}
+{% load i18n staticfiles cache wger_extras svg %}
 
 <!--
         Title
@@ -59,14 +59,36 @@ $(document).ready(function() {
 -->
 {% block content %}
 {% cache cache_timeout muscle-overview language.id %}
-{% trans "Hover with the mouse over the muscles to show corresponding exercises." %}
-
+{% trans "Hover with the mouse over the muscles to show corresponding exercises one two." %}
+<div>Hello</div>
 <div class="row">
     <div class="col-sm-4 col-xs-6">
         <h4 style="padding-bottom:0.5em;">{% trans "Muscles" %}</h4>
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-1.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-2.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-3.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-4.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-5.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-6.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-7.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-8.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-9.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-10.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-11.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-13.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-14.svg">-->
+        <!--<img class="muscle-svgs" src="/static/images/muscles/main/muscle-15.svg">-->
+        <div class="muscle-svg front-muscle">
+            {% svg 'muscle-front' %}
+        </div>
+        <div class="muscle-svg back-muscle">
+            {% svg 'muscle-back' %}
+        </div>
+
+
         <div id="muscle-system"
              class="muscle-background"
-             style="background-image: url('/static/images/muscles/muscular_system_front.svg');">
+             style="background-image: url('/static/images/muscles/muscular_system_front.svg'); color: blue;">
         </div>
     </div>
     <div class="col-sm-4 col-xs-6">
@@ -81,6 +103,8 @@ $(document).ready(function() {
 
             <ul class="muscle-list">
             {% for muscle in group.list %}
+
+                    {{ muscle.id }}
             <li class="muscle"
                 data-target="muscle-{{muscle.id}}"
                 data-is-front="{{muscle.is_front}}"
@@ -113,8 +137,11 @@ $(document).ready(function() {
         {% endfor %}
     </div>
 </div>
+</script>
 {% endcache %}
 {% endblock %}
+
+
 
 
 <!--

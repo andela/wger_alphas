@@ -133,10 +133,30 @@ a:hover img
  */
 div.muscle-background
 {
-    width: 180px;
-    height: 276px;
-    background-size: 150px;
+    width: 200px;
+    height: 370px;
+    background-size: 200px;
     background-repeat: no-repeat;
+}
+
+.muscle-svg{
+    position: absolute;
+}
+
+.muscle-svg.back-muscle {
+    display: none;
+}
+
+.muscle-svg.back-muscle, .muscle-svg.front-muscle {
+
+    width: 200px;
+    height: 370px;
+    background-size: 200px;
+    background-repeat: no-repeat;
+}
+
+.muscle-svg.back-muscle path, .muscle-svg.front-muscle path{
+    opacity: 0 !important;
 }
 
 /*

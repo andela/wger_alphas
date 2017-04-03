@@ -697,4 +697,5 @@ $(document).ready(function () {
       '/' + token;
     window.location.href = targetUrl;
   });
+
 });
