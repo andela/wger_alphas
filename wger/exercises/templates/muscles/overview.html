@@ -103,8 +103,6 @@ $(document).ready(function() {
 
             <ul class="muscle-list">
             {% for muscle in group.list %}
-
-                    {{ muscle.id }}
             <li class="muscle"
                 data-target="muscle-{{muscle.id}}"
                 data-is-front="{{muscle.is_front}}"

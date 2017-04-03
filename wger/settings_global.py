@@ -318,7 +318,6 @@ STATIC_URL = '/static/'
 SVG_DIRS = [
     os.path.join(BASE_DIR, 'core/static/images/muscles/main')
 ]
-print("SVG DIRS: ", SVG_DIRS)
 
 # The default is not DEBUG, override if needed
 # COMPRESS_ENABLED = True

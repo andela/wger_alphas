@@ -32,24 +32,29 @@ function wgerHighlightMuscle(element) {
   isFront = ($(element).data('isFront') === 'True') ? 'front' : 'back';
   muscleId = divId.match(/\d+/);
 
+  // Reset all other highlighted muscles
+  $muscle = $('.muscle');
+  $muscle.removeClass('muscle-hover');
+  $muscle.addClass('muscle-not-inactive');
+
+  // Highlight the current one
+  $(element).removeClass('muscle-not-hover');
+  $(element).addClass('muscle-hover');
+
+
   // Set the corresponding background
   $('#muscle-system').css('background-image',
     'url(/static/images/muscles/main/muscle-' + muscleId + '.svg),' +
     'url(/static/images/muscles/muscular_system_' + isFront + '.svg)');
 
     if (isFront === 'front') {
-        console.log("Front!!");
         $('.muscle-svg.back-muscle').hide();
         $('.muscle-svg.front-muscle').show();
     }
     else if (isFront === 'back'){
-        console.log("Back!");
         $('.muscle-svg.front-muscle').hide();
         $('.muscle-svg.back-muscle').show();
     }
-  // Show the corresponding exercises
-  $('.exercise-list').hide();
-  $('#' + divId).show();
 }
 
 /*
@@ -109,10 +114,6 @@ function setMuscleDirection(direction){
 }
 
 $(document).ready(function (){
-    // isFront = ($(element).data('isFront') === 'True') ? 'front' : 'back';
-    // divId = $(element).data('target');
-    // var muscleId = 3
-    // muscleId = divId.match(/\d+/);
     var path =  $('svg path');
     path.hover(function() {
         wgerShowMuscleDetails(this);

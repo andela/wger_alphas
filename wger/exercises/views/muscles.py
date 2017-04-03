@@ -59,16 +59,6 @@ class MuscleListView(ListView):
         context['active_languages'] = load_item_languages(
                 LanguageConfig.SHOW_ITEM_EXERCISES)
         context['show_shariff'] = True
-
-        # muscle_svg_nums = []
-        # for directory in settings.SVG_DIRS:
-        #     print("IN dir: ", directory)
-        #     muscle_svg_nums += [
-        #         int(re.findall(r'\d+', file)[0]) for file in os.listdir(
-        #                 directory)
-        #         if os.path.isfile(os.path.join(directory, file))
-        #         and file.endswith(".svg")]
-        # context['svg_nums'] = muscle_svg_nums
         return context
 
 

@@ -313,6 +313,11 @@ div.info a, div.info a:hover, div.info a:active{
     margin-top: 0;
 }
 
-.muscle:hover{
-    background: #eee !important;
+.muscle-hover{
+    background-color: #eee !important;
 }
+
+.muscle-not-hover{
+    background-color: transparent;
+}
+
