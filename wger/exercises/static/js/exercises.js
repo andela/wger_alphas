@@ -50,14 +50,12 @@ function wgerHighlightMuscle(element) {
     if (isFront === 'front') {
         $('#muscle-direction #set-front').hide();
         $('#muscle-direction #set-back').show();
-        $('.muscle-svg.back-muscle').hide();
-        $('.muscle-svg.front-muscle').show();
+        displaySVGMuscles('front');
     }
     else if (isFront === 'back'){
         $('#muscle-direction #set-back').hide();
         $('#muscle-direction #set-front').show();
-        $('.muscle-svg.front-muscle').hide();
-        $('.muscle-svg.back-muscle').show();
+        displaySVGMuscles('back')
     }
 }
 
@@ -116,14 +114,31 @@ function wgerShowMuscleDetails(element){
 
 }
 
-function setMuscleDirection(direction){
-    if (direction === 'front') {
-        var muscles_direction = $("#muscle-system").attr('style').match(/\(\w+muscular_system_back.svg/);
-        console.log("dir front: ", muscles_direction);
+function setMuscleDirection(orientation){
+    if (orientation === 'front') {
+        var muscles_orientation = $("#muscle-system").attr('style').match(/\(\w+muscular_system_back.svg/);
+        // Set the corresponding background
+        $('#muscle-system').css('background-image',
+            'url(/static/images/muscles/muscular_system_front.svg)');
+        displaySVGMuscles('front');
+        console.log("dir front: ", muscles_orientation);
     }
-    else if (direction === 'back') {
-        var muscles_direction = $("#muscle-system").attr('style').match(/\(\w+muscular_system_back.svg/);
-        console.log("dir back: ", muscles_direction)
+    else if (orientation === 'back') {
+        var muscles_orientation = $("#muscle-system").attr('style').match(/\(\w+muscular_system_back.svg/);
+        $('#muscle-system').css('background-image',
+            'url(/static/images/muscles/muscular_system_back.svg)');
+        displaySVGMuscles('back');
+        console.log("dir back: ", muscles_orientation)
+    }
+}
+
+function displaySVGMuscles(orientation) {
+    if (orientation === 'front') {
+        $('.muscle-svg.back-muscle').hide();
+        $('.muscle-svg.front-muscle').show();
+    } else if (orientation === 'back') {
+        $('.muscle-svg.front-muscle').hide();
+        $('.muscle-svg.back-muscle').show();
     }
 }
 
