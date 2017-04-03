@@ -12,13 +12,4 @@ test:
         - python manage.py migrate --settings=wger.settings
     override:
         - python manage.py test --settings=wger.settings
-deployment:
-    staging:
-        branch: develop
-        commands:
-            - git fetch origin --unshallow
-            - git push -f git@heroku.com:wger-alphas.git $CIRCLE_SHA1:refs/heads/master
-            - heroku run python manage.py collectstatic --app wger-alphas
-            - heroku run python manage.py makemigrations --app wger-alphas
-            - heroku run python manage.py migrate --app wger-akira
-            - heroku ps:scale web=1 --app wger-alphas
+
