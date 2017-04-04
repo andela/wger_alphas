@@ -86,6 +86,9 @@ INSTALLED_APPS = (
 
     # django-bower for installing bower packages
     'djangobower',
+
+    # Handles social login functonality
+    'social.apps.django_app.default',
 )
 
 # added list of external libraries to be installed by bower
@@ -113,7 +116,8 @@ MIDDLEWARE_CLASSES = (
     # Javascript Header. Sends helper headers for AJAX
     'wger.utils.middleware.JavascriptAJAXRedirectionMiddleware',
 
-    # Custom authentication middleware. Creates users on-the-fly for certain paths
+    # Custom authentication middleware. Creates users on-the-fly for certain
+    # paths
     'wger.utils.middleware.WgerAuthenticationMiddleware',
 
     # Send an appropriate Header so search engines don't index pages
@@ -130,8 +134,25 @@ MIDDLEWARE_CLASSES = (
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'wger.utils.helpers.EmailAuthBackend'
+    'wger.utils.helpers.EmailAuthBackend',
+
+    # social authentication backend
+    'social.backends.facebook.FacebookOAuth2',
+    'social.backends.google.GoogleOAuth2',
+    'social.backends.twitter.TwitterOAuth'
 )
+
+# Google plus authentication tokens
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '433847606494-9cvgrbvvej4bqccistmrbcajfsukkjbs.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'I3Xuyo7n6VkmoSA2FQRdJAYC'
+
+# Twitter authentication tokens
+SOCIAL_AUTH_TWITTER_KEY = 'QPgigjWrce5eE1MmR4RRNkjF1'
+SOCIAL_AUTH_TWITTER_SECRET = 'cGIw7OqC7oMl0K0b4ea8GL8FmicVZzaDM4nKnognshLQK1LfAG'
+
+# Facebook Authentication tokens
+SOCIAL_AUTH_FACEBOOK_KEY = '604763099718609'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'c629e1b40b69c06137140fa3d12da346'
 
 TEMPLATES = [
     {
@@ -333,7 +354,8 @@ else:
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('wger.utils.permissions.WgerPermission',),
     'PAGINATE_BY': 20,
-    'PAGINATE_BY_PARAM': 'limit',  # Allow client to override, using `?limit=xxx`.
+    # Allow client to override, using `?limit=xxx`.
+    'PAGINATE_BY_PARAM': 'limit',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
