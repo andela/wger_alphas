@@ -155,8 +155,12 @@ $(document).ready(function (){
 
     $('#muscle-direction #set-front').click(function(){
         setMuscleDirection('front');
+        $('#muscle-direction #set-front').hide();
+        $('#muscle-direction #set-back').show();
     });
     $('#muscle-direction #set-back').click(function() {
         setMuscleDirection('back');
+        $('#muscle-direction #set-back').hide();
+        $('#muscle-direction #set-front').show();
     });
 });
