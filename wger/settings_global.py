@@ -16,6 +16,7 @@
 
 import re
 import sys
+import os
 
 '''
 This file contains the global settings that don't usually need to be changed.
@@ -143,17 +144,16 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Google plus authentication tokens
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '433847606494-9cvgrbvvej4b' + \
-    'qccistmrbcajfsukkjbs.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'I3Xuyo7n6VkmoSA2FQRdJAYC'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ['GOOGLE_OAUTH2_KEY']
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ['GOOGLE_OAUTH2_SECRET']
 
 # Twitter authentication tokens
-SOCIAL_AUTH_TWITTER_KEY = 'QPgigjWrce5eE1MmR4RRNkjF1'
-SOCIAL_AUTH_TWITTER_SECRET = 'cGIw7OqC7oMl0K0b4ea8GL8FmicVZzaDM4nKnognshLQK1LfAG'
+SOCIAL_AUTH_TWITTER_KEY = os.environ['TWITTER_KEY']
+SOCIAL_AUTH_TWITTER_SECRET = os.environ['TWITTER_SECRET']
 
 # Facebook Authentication tokens
-SOCIAL_AUTH_FACEBOOK_KEY = '604763099718609'
-SOCIAL_AUTH_FACEBOOK_SECRET = 'c629e1b40b69c06137140fa3d12da346'
+SOCIAL_AUTH_FACEBOOK_KEY = os.environ['FACEBOOK_KEY']
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ['FACEBOOK_SECRET']
 
 TEMPLATES = [
     {
