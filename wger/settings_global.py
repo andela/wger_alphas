@@ -143,7 +143,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # Google plus authentication tokens
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '433847606494-9cvgrbvvej4bqccistmrbcajfsukkjbs.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '433847606494-9cvgrbvvej4b' + \
+    'qccistmrbcajfsukkjbs.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'I3Xuyo7n6VkmoSA2FQRdJAYC'
 
 # Twitter authentication tokens
