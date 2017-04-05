@@ -14,9 +14,7 @@ sudo: false
 
 # Python versions to test
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
+  - "3.6"
 
 # Manually define here the combinations environment variables to test
 # https://github.com/travis-ci/travis-ci/issues/1519
@@ -53,11 +51,8 @@ before_script:
 
 # Do the tests
 script:
-  # Formatting
-  - pep8 wger
-
   # Javascript linting
-  - gulp lint
+  - npm install gulp-eslint
 
   # Regular application
   - coverage run --source='.' ./manage.py test
@@ -65,3 +60,4 @@ script:
 
   # Code coverage
   - coverage report
+  
