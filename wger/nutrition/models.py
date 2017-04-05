@@ -554,7 +554,7 @@ class Meal(models.Model):
         '''
         Return a more human-readable representation
         '''
-        return u"{0} Meal".format(self.order)
+        return u"{0} Meal".format(self.plan)
 
     def get_owner_object(self):
         '''
@@ -621,7 +621,7 @@ class MealItem(models.Model):
         '''
         Return a more human-readable representation
         '''
-        return u"{0}g ingredient {1}".format(self.amount, self.ingredient_id)
+        return u"{0}g {1}".format(self.amount, self.ingredient)
 
     def get_owner_object(self):
         '''
