@@ -61,11 +61,7 @@ SettingFormset = modelformset_factory(Setting,
 @login_required
 def create(request, day_pk):
     '''
-<<<<<<< HEAD
-    Creates a new set. This view handles both the set form and the 
-=======
-    Creates a new set. This view handles both the set form and the 
->>>>>>> c014ccbc54a0a641a4c4b7257543e66cab4c1a93
+    Creates a new set. This view handles both the set form and the
     corresponding settings formsets
     '''
     day = get_object_or_404(Day, pk=day_pk)
