@@ -14,6 +14,19 @@
     {% trans 'Login' as submit_text %}
     {% render_form_fields form submit_text %}
 </form>
+
+<div class='col-md-10 col-md-push-2 text-center'>
+    <h3>Social login options</h3>
+    <div class='col-md-4'>
+        <a href="{% url "social:begin" "facebook" %}"><i class='fa fa-facebook fa-2x'></i></a>
+    </div>
+    <div class='col-md-4'>
+         <a href="{% url "social:begin" "twitter" %}"><i class='fa fa-twitter fa-2x'></i></a>
+    </div>
+    <div class='col-md-4'>
+        <a href="{% url "social:begin" "google-oauth2" %}"><i class='fa fa-google fa-2x'></i></a>
+    </div>
+</div>
 {% endblock %}
 
 

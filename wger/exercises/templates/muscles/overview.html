@@ -30,6 +30,25 @@ $(document).ready(function() {
     });
 
     // Highlight on click
+    $('.muscle').click(function() {
+
+        // Show the corresponding exercises
+
+        divId = $(this).data('target');
+        $('.exercise-list').hide();
+        $('#' + divId).show();
+
+        // Reset all other highlighted muscles
+
+        $muscle = $('.muscle');
+        $muscle.removeClass('muscle-active');
+        $muscle.addClass('muscle-inactive');
+
+        // Highlight the current one
+
+        $(this).removeClass('muscle-inactive');
+        $(this).addClass('muscle-active');
+    });
 
 });
 </script>
