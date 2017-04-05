@@ -12,3 +12,4 @@ test:
         - python manage.py migrate --settings=wger.settings
     override:
         - python manage.py test --settings=wger.settings
+
