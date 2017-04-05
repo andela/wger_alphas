@@ -167,7 +167,7 @@ class ScheduleManager(models.Manager):
 
     def get_current_workout(self, user):
         '''
-        Finds the currently active workout for the user, by checking the 
+        Finds the currently active workout for the user, by checking the
         schedules and the workouts
         :rtype : list
         '''
