@@ -1,1 +1,1 @@
-web: gunicorn wger.wsgi --log-file -
+web: python manage.py runserver --settings=wger.settings 0.0.0.0:$PORT
