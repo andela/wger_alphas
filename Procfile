@@ -1,1 +1,1 @@
-web: python manage.py runserver --settings=wger.settings 0.0.0.0:$PORT
+web: ./manage.py runserver --settings wger.settings 0.0.0.0:$PORT
