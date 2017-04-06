@@ -148,7 +148,7 @@ patterns_day = [
         login_required(day.DayCreateView.as_view()),
         name='add'),
     url(r'(?P<pk>\d+)/delete/$',
-        login_required(day.DayDeleteView.as_view()),
+        day.DayDeleteView.as_view(),
         name='delete'),
     url(r'^(?P<id>\d+)/view/$',
         day.view,
