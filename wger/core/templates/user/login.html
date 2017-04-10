@@ -1,15 +1,10 @@
 {% extends "base.html" %}
-{% load browserid i18n staticfiles wger_extras %}
+{% load i18n staticfiles wger_extras %}
 
 {% block title %}{% trans "Login" %}{% endblock %}
 
 
 {% block header %}
-<script src="https://login.persona.org/include.js"></script>
-<script src="{% static 'browserid/api.js' %}"></script>
-<script src="{% static 'browserid/browserid.js' %}"></script>
-
-{% browserid_info %}
 {% endblock %}
 
 {% block content %}
@@ -19,6 +14,19 @@
     {% trans 'Login' as submit_text %}
     {% render_form_fields form submit_text %}
 </form>
+
+<div class='col-md-10 col-md-push-2 text-center'>
+    <h3>Social login options</h3>
+    <div class='col-md-4'>
+        <a href="{% url "social:begin" "facebook" %}"><i class='fa fa-facebook fa-2x'></i></a>
+    </div>
+    <div class='col-md-4'>
+         <a href="{% url "social:begin" "twitter" %}"><i class='fa fa-twitter fa-2x'></i></a>
+    </div>
+    <div class='col-md-4'>
+        <a href="{% url "social:begin" "google-oauth2" %}"><i class='fa fa-google fa-2x'></i></a>
+    </div>
+</div>
 {% endblock %}
 
 
@@ -38,22 +46,4 @@
         {% trans "Reset password" %}
     </a>
 </p>
-
-{% if not hide_persona %}
-<h4>Persona</h4>
-    <a id="browserid-login"
-       href="#"
-       class="browserid-login browserid-login"
-       data-site-name="Workout Manager"
-       data-next="/">
-        <span>{% trans "Sign in with your Email" %}</span>
-    </a>
-
-<p>
-    <small>{% blocktrans %}Persona (BrowserID) replaces multiple passwords, you don't
-    need to remember a new password for this site. For more information, please
-    take a look at the <a href="https://login.persona.org/" target="_blank">the
-    Persona website</a>.{% endblocktrans %}</small>
-</p>
-{% endif %}
 {% endblock %}

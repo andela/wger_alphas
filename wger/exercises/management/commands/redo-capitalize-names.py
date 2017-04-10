@@ -15,23 +15,28 @@
 # You should have received a copy of the GNU Affero General Public License
 
 from django.core.management.base import BaseCommand
+
 from wger.exercises.models import Exercise
+from wger.utils.helpers import smart_capitalize
 
 
 class Command(BaseCommand):
     '''
-    Read out the user submitted exercise.
+    Re-calculates the capitalized exercise names
 
-    Used to generate the AUTHORS file for a release
+    This is a safe operation, since the original names (as entered by the user)
+    are still available.
     '''
 
-    help = 'Read out the user submitted exercise'
+    help = 'Re-calculates the capitalized exercise names'
 
     def handle(self, **options):
 
-        exercises = Exercise.objects.accepted()
-        usernames = []
+        exercises = Exercise.objects.all()
         for exercise in exercises:
-            if exercise.user not in usernames:
-                usernames.append(exercise.user)
-                self.stdout.write(exercise.user)
+            if options['verbosity'] > 1:
+                self.stdout.write('#{} {} -> {}'.format(exercise.id,
+                                                        exercise.name,
+                                                        smart_capitalize(exercise.name_original)))
+            exercise.name = smart_capitalize(exercise.name_original)
+            exercise.save()

@@ -14,27 +14,22 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 
-from django.contrib.auth.models import User
-from django.core.management.base import BaseCommand
 
-from wger.gym.helpers import get_user_last_activity
+from wger.core.tests.base_testcase import WorkoutManagerTestCase
+from wger.utils.helpers import smart_capitalize
 
 
-class Command(BaseCommand):
+class CapitalizerTestCase(WorkoutManagerTestCase):
     '''
-    Updates the user cache table
+    Tests the "intelligent" capitalizer
     '''
 
-    help = 'Update the user cache-table. This is only needed when the python' \
-           'code used to calculate any of the cached entries is changed and ' \
-           'the ones in the database need to be updated to reflect the new logic.'
-
-    def handle(self, **options):
+    def test_capitalizer(self):
         '''
-        Process the options
+        Tests different combinations of input strings
         '''
-
-        print('** Updating last activity')
-        for user in User.objects.all():
-            user.usercache.last_activity = get_user_last_activity(user)
-            user.usercache.save()
+        self.assertEqual(smart_capitalize("some long words"), "Some Long Words")
+        self.assertEqual(smart_capitalize("Here a short one"), "Here a Short One")
+        self.assertEqual(smart_capitalize("meine gym AG"), "Meine Gym AG")
+        self.assertEqual(smart_capitalize("ßpecial case"), "ßpecial Case")
+        self.assertEqual(smart_capitalize("fIRST lettER only"), "FIRST LettER Only")

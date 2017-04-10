@@ -3,7 +3,6 @@
 #
 
 Django>=1.9,<1.10
-django-browserid>=1.0,<1.1
 django-recaptcha
 reportlab
 django_mobile
@@ -20,6 +19,7 @@ django-sortedm2m
 django-activity-stream
 django-bower
 invoke
+requests
 
 # REST API
 djangorestframework>=3.2,<3.3
@@ -29,3 +29,6 @@ django-cors-headers
 
 # Python3 compatibility
 six
+
+# SOCIAL LOGIN
+python-social-auth==0.2.21

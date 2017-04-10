@@ -1,0 +1,15 @@
+machine:
+    python:
+        version: 3.5.2
+dependencies:
+    pre:
+        - pip install -r requirements_devel.txt
+        - invoke create_settings --settings-path ./wger/settings.py --database-path ./wger/database.sqlite
+        - invoke bootstrap_wger --settings-path ./wger/settings.py --no-start-server
+
+test:
+    pre:
+        - python manage.py migrate --settings=wger.settings
+    override:
+        - python manage.py test --settings=wger.settings
+
