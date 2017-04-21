@@ -6,8 +6,7 @@
 {#             #}
 {% block breadcrumbs %}
     {{ block.super }}
-
-    {% breadcrumb "Groups" "groups:group:list" %}
+    {% breadcrumb "GroupsJDHS" "groups:group:list" %}
     {% breadcrumb object object.get_absolute_url %}
 {% endblock %}
 
@@ -15,15 +14,20 @@
 {#       #}
 {# Title #}
 {#       #}
-{% block title %}{{ object }}{% endblock %}
-
-
+{% block title %}Hello {{ object }} again{% endblock %}
 
 {#         #}
 {# Content #}
 {#         #}
 {% block content %}
-
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-9" style="margin-bottom: 20px;">
+        <a href="{% url 'groups:group:compare' object.pk %}"
+           id="compare-members-link"
+           class="btn btn-primary btn-sm">Compare Member Workouts
+        </a>
+    </div>
+</div>
 {# Render the activity stream #}
 {% for event in last_activity %}
 <div class="panel panel-default">
