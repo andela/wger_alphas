@@ -6,8 +6,9 @@
 {#             #}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "Groups" "groups:group:list" "Compare"%}
+    {% breadcrumb "Groups" "groups:group:list" %}
     {% breadcrumb object object.get_absolute_url %}
+    {% breadcrumb "Compare" "" %}
 {% endblock %}
 
 
@@ -20,58 +21,10 @@
 {# Content #}
 {#         #}
 {% block content %}
-<div class="row">
-    <div class="col-sm-4 col-sm-offset-9" style="margin-bottom: 20px;">
-        <a href="{% url 'groups:group:compare' object.pk %}"
-           id="compare-members-link"
-           class="btn btn-primary btn-sm">Compare Member Workouts
-        </a>
-    </div>
-</div>
-{# Render the activity stream #}
-{% for event in last_activity %}
-<div class="panel panel-default">
-    <div class="panel-body">
-        <p class="list-group-item-text pull-right">
-        {# Verb #}
-        <span class="glyphicon
-            {% if event.verb == 'added' %}
-                glyphicon-plus
-            {% elif event.verb == 'created' %}
-                glyphicon-asterisk
-            {% elif event.verb == 'edited' %}
-                glyphicon-pencil
-            {% elif event.verb == 'left' %}
-                glyphicon-log-out
-            {% elif event.verb == 'joined' %}
-                glyphicon-log-in
-            {% elif event.verb == 'promoted' %}
-                glyphicon-sunglasses
-            {% endif %}
-        "></span>
 
-        {# Action object #}
-        {% if event.action_object %}
-            {% if event.action_object.get_absolute_url %}
-                <a href="{{ event.action_object.get_absolute_url }}">{{ event.action_object }}</a>
-            {% else %}
-                {{ event.action_object }}
-            {% endif %}
-        {% endif %}
 
-        {# Time #}
-        {{ event.timestamp|timesince }}
-        </p>
-
-        {# Actor #}
-        <h4 class="list-group-item-heading">
-            {{ event.actor|format_username }}
-        </h4>
-    </div>
-
-</div>
-{% endfor %}
 {% endblock %}
+{# End block Content #}
 
 
 
