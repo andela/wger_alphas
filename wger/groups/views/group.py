@@ -100,10 +100,12 @@ class DetailView(LoginRequiredMixin, DetailView):
             context['group_dropdown'].append([_("Leave group"),
                                               reverse('groups:member:leave',
                                                       kwargs={'group_pk': group.pk})])
+            context['is_member'] = True
         else:
             context['group_dropdown'].append([_("Join group"),
                                               reverse('groups:member:join-public',
                                                       kwargs={'group_pk': group.pk})])
+            context['is_member'] = False
         if self.request.user in admin_list:
             context['group_dropdown'].append([_("Edit"),
                                               reverse('groups:group:edit',
@@ -159,7 +161,7 @@ class CompareView(DetailView):
         if not group.public\
                 and not group.membership_set.filter(user=self.request.user).exists():
             return 'group/view_application.html'
-        return 'group/view.html'
+        return 'group/compare.html'
 
     def get_context_data(self, **kwargs):
         '''
@@ -184,10 +186,12 @@ class CompareView(DetailView):
             context['group_dropdown'].append([_("Leave group"),
                                               reverse('groups:member:leave',
                                                       kwargs={'group_pk': group.pk})])
+            context['is_member'] = True
         else:
             context['group_dropdown'].append([_("Join group"),
                                               reverse('groups:member:join-public',
                                                       kwargs={'group_pk': group.pk})])
+            context['is_member'] = False
         if self.request.user in admin_list:
             context['group_dropdown'].append([_("Edit"),
                                               reverse('groups:group:edit',

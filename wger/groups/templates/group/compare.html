@@ -6,7 +6,7 @@
 {#             #}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "Groups" "groups:group:list" %}
+    {% breadcrumb "Groups" "groups:group:list" "Compare"%}
     {% breadcrumb object object.get_absolute_url %}
 {% endblock %}
 
@@ -20,18 +20,14 @@
 {# Content #}
 {#         #}
 {% block content %}
-
-{% if is_member %}
 <div class="row">
     <div class="col-sm-4 col-sm-offset-9" style="margin-bottom: 20px;">
         <a href="{% url 'groups:group:compare' object.pk %}"
            id="compare-members-link"
-           class="btn btn-primary btn-sm">{% trans "Compare Member Workouts" %}
+           class="btn btn-primary btn-sm">Compare Member Workouts
         </a>
     </div>
 </div>
-{% endif %}
-
 {# Render the activity stream #}
 {% for event in last_activity %}
 <div class="panel panel-default">
@@ -110,6 +106,7 @@
     {% endif %}
 
     <h4>{% trans "Members" %}</h4>
+    <p>{% trans "Choose a member to compare workouts with" %}</p>
     <ul class="list-group">
     {% for membership in memberships_list %}
     <li class="list-group-item ">
