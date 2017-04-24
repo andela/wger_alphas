@@ -81,6 +81,7 @@ class Workout(models.Model):
         """
         return reverse('manager:workout:view', kwargs={'pk': self.id})
 
+
     def __str__(self):
         """
         Return a more human-readable representation

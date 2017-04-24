@@ -19,7 +19,45 @@
 {# Content #}
 {#         #}
 {% block content %}
+<h4>{% trans "Workouts" %}</h4>
+    <div class="list-group">
+        {% for workout in object.workout_set.all %}
+            <div class="list-group-item">
+                <a href="{{ workout.get_absolute_url }}">
+                    {{ workout }}
+                     {% if workout.user == user%}
+                         <span class="label label-success">{% trans "Owner" %}
+                         </span>
+                        {% endif %}
+                </a>
+                <br>
 
+                <!-- Workout Log -->
+
+                {% for day in workout.canonical_representation.day_list %}
+                <h4>{{ day.obj.description }}</h4>
+
+                {% for set in day.set_list %}
+
+                {% for exercise in set.exercise_list %}
+                    Exercise: {{ exercise }}
+
+
+                {% empty%}
+                <p>
+                    <em>{% trans "No exercises for this day." %}</em>
+                </p>
+                {% endfor %}
+                {% endfor %}
+            {% endfor %}
+            <!-- End Workout Log -->
+                <div>Workout content</div>
+
+            </div>
+        {% empty %}
+            <div class="list-group-item">{% trans "Nothing found" %}</div>
+        {% endfor %}
+    </div>
 
 {% endblock %}
 {# End block Content #}
@@ -29,119 +67,4 @@
 {#         #}
 {# Sidebar #}
 {#         #}
-{% block sidebar %}
-
-    {% if object.image %}
-        <img src="{{ object.image|thumbnail_url:'large' }}" class="img-responsive img-rounded">
-        <br>
-    {% endif %}
-
-    {% if object.description %}
-        <h4>{% trans "Description" %}</h4>
-        <p style="white-space: pre-line;">{{ object.description }}</p>
-    {% endif %}
-
-    {% if group_dropdown %}
-    <div class="btn-group pull-right">
-        <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
-            {% trans "Actions" %} <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-            {% for entry in group_dropdown %}
-                <li>
-                    <a href="{{ entry.1 }}">{{ entry.0 }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
-    <h4>{% trans "Members" %}</h4>
-    <p>{% trans "Choose a member to compare workouts with" %}</p>
-    <ul class="list-group">
-    {% for membership in memberships_list %}
-    <li class="list-group-item member-compare">
-
-        {{ membership.user|format_username }}
-        {% if membership.is_admin %}
-            <span class="label label-primary">{% trans "Admin" %}</span>
-        {% endif %}
-
-        {% if membership.dropdowns %}
-        <div class="btn-group pull-right">
-            <button type="button" class="btn btn-default btn-xs dropdown-toggle btn-xs" data-toggle="dropdown">
-                <span class="glyphicon glyphicon-cog"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                {% for option in membership.dropdowns %}
-                    <li>
-                        <a href="{{ option.1 }}">{{ option.0 }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
-    </li>
-    {% empty %}
-        <li class="list-group-item">
-            {% trans "Nothing found" %}
-        </li>
-    {% endfor %}
-    </ul>
-
-    {% if user in object.get_admins_list and object.application_set.count %}
-        <h4>{% trans "Applicants" %}</h4>
-        <ul class="list-group">
-            {% for application in object.application_set.all %}
-            <li class="list-group-item ">
-                {{ application.user|format_username }}
-
-
-                <div class="btn-group pull-right">
-                    <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon-cog"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
-                            <a href="{% url 'groups:application:accept' object.pk application.user.pk %}">
-                                <span class="glyphicon glyphicon-ok"></span>
-                                {% trans "Accept" %}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'groups:application:deny' object.pk application.user.pk %}">
-                                <span class="glyphicon glyphicon-remove"></span>
-                                {% trans "Deny" %}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-            </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-
-    <div class="btn-group pull-right">
-        <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
-            {% trans "Actions" %} <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-            <li>
-                <a href="{% url 'manager:workout:add' object.pk %}">{% trans 'Add workout' %}</a>
-            </li>
-        </ul>
-    </div>
-    <h4>{% trans "Workouts" %}</h4>
-    <div class="list-group">
-        {% for workout in object.workout_set.all %}
-            <a class="list-group-item" href="{{ workout.get_absolute_url }}">
-                {{ workout }}
-            </a>
-        {% empty %}
-            <div class="list-group-item">{% trans "Nothing found" %}</div>
-        {% endfor %}
-    </div>
-
-{% endblock %}
+{% block workouts_list %}{% endblock %}
