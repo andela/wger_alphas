@@ -16,36 +16,43 @@
 import logging
 
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseForbidden
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-from django.utils.translation import ugettext_lazy
-from django.views.generic import CreateView, UpdateView
+from django.utils.translation import ugettext_lazy, ugettext as _
+from django.views.generic import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from wger.nutrition.forms import MealItemForm
 from wger.nutrition.models import Meal, MealItem
-from wger.utils.generic_views import WgerFormMixin
+from wger.utils.generic_views import (
+    WgerFormMixin,
+    WgerDeleteMixin
+)
 
 
 logger = logging.getLogger(__name__)
 
 
-@login_required
-def delete_meal_item(request, item_id):
+class MealItemDeleteView(WgerDeleteMixin, LoginRequiredMixin, DeleteView):
     '''
-    Deletes the meal ingredient with the given ID
+    Generic view to delete a meal item
     '''
+    model = MealItem
+    fields = ('amount',)
+    messages = ugettext_lazy('Successfully deleted')
+    form_action_urlname = 'nutrition:meal_item:delete'
 
-    # Load the item
-    item = get_object_or_404(MealItem, pk=item_id)
-    plan = item.meal.plan
+    def get_context_data(self, **kwargs):
+        context = super(MealItemDeleteView, self).get_context_data(**kwargs)
+        context['form_action'] = reverse(
+            'nutrition:meal_item:delete', kwargs={'pk': self.object.id})
+        context['title'] = _(u"Delete '{0}'?").format(self.object)
 
-    # Only delete if the user is the owner
-    if plan.user == request.user:
-        item.delete()
-        return HttpResponseRedirect(reverse('nutrition:plan:view', kwargs={'id': plan.id}))
-    else:
-        return HttpResponseForbidden()
+        return context
+
+    def get_success_url(self):
+        return reverse(
+            'nutrition:plan:view', kwargs={'id': self.object.meal.plan_id})
 
 
 class MealItemCreateView(WgerFormMixin, CreateView):
@@ -64,7 +71,8 @@ class MealItemCreateView(WgerFormMixin, CreateView):
         meal = get_object_or_404(Meal, pk=kwargs['meal_id'])
         if meal.plan.user == request.user:
             self.meal = meal
-            return super(MealItemCreateView, self).dispatch(request, *args, **kwargs)
+            return super(MealItemCreateView, self).dispatch(
+                request, *args, **kwargs)
         else:
             return HttpResponseForbidden()
 
@@ -78,7 +86,8 @@ class MealItemCreateView(WgerFormMixin, CreateView):
         context = super(MealItemCreateView, self).get_context_data(**kwargs)
         context['form_action'] = reverse('nutrition:meal_item:add',
                                          kwargs={'meal_id': self.meal.id})
-        context['ingredient_searchfield'] = self.request.POST.get('ingredient_searchfield', '')
+        context['ingredient_searchfield'] = self.request.POST.get(
+            'ingredient_searchfield', '')
         return context
 
     def form_valid(self, form):
@@ -102,7 +111,8 @@ class MealItemEditView(WgerFormMixin, UpdateView):
     template_name = 'meal_item/edit.html'
 
     def get_success_url(self):
-        return reverse('nutrition:plan:view', kwargs={'id': self.object.meal.plan.id})
+        return reverse(
+            'nutrition:plan:view', kwargs={'id': self.object.meal.plan.id})
 
     def get_context_data(self, **kwargs):
         '''

@@ -32,23 +32,10 @@ function wgerHighlightMuscle(element) {
   isFront = ($(element).data('isFront') === 'True') ? 'front' : 'back';
   muscleId = divId.match(/\d+/);
 
-  // Reset all other highlighted muscles
-  $muscle = $('.muscle');
-  $muscle.removeClass('muscle-active');
-  $muscle.addClass('muscle-inactive');
-
-  // Highlight the current one
-  $(element).removeClass('muscle-inactive');
-  $(element).addClass('muscle-active');
-
   // Set the corresponding background
   $('#muscle-system').css('background-image',
     'url(/static/images/muscles/main/muscle-' + muscleId + '.svg),' +
     'url(/static/images/muscles/muscular_system_' + isFront + '.svg)');
-
-  // Show the corresponding exercises
-  $('.exercise-list').hide();
-  $('#' + divId).show();
 }
 
 /*
@@ -92,3 +79,24 @@ function wgerDrawWeightLogChart(data, divId) {
     });
   }
 }
+
+$(document).ready(function(){
+    // on click activate modal
+    $(".theModal").click(function() {
+     //  get exercise id from the tag
+     var exerciseId = $(this).attr('id');
+     var title = $(this).text();
+     $.ajax({
+         url: "/exercise/" + exerciseId + "/detail_view/",
+         method: 'GET',
+         success: function(respose) {
+            // populate content to modal
+            $("#myModal .modal-dialog .modal-content #modal-title").text(title);
+            $("#myModal .modal-dialog .modal-content .modal-body").html(respose);
+            },
+            error: function(errors){
+              console.log(errors);
+            }
+        });
+    });
+});

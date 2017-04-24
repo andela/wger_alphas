@@ -149,6 +149,63 @@ def view(request, id, slug=None):
 
     return render(request, 'exercise/view.html', template_data)
 
+def exercise_detail(request, id, slug=None):
+    '''
+    Detail view for an exercise
+    '''
+
+    template_data = {}
+    template_data['comment_edit'] = False
+    template_data['show_shariff'] = True
+
+    exercise = get_object_or_404(Exercise, pk=id)
+
+    template_data['exercise'] = exercise
+
+    # Create the backgrounds that show what muscles the exercise works on
+    backgrounds = cache.get(cache_mapper.get_exercise_muscle_bg_key(int(id)))
+    if not backgrounds:
+        backgrounds_back = []
+        backgrounds_front = []
+
+        for muscle in exercise.muscles.all():
+            if muscle.is_front:
+                backgrounds_front.append('images/muscles/main/muscle-%s.svg' % muscle.id)
+            else:
+                backgrounds_back.append('images/muscles/main/muscle-%s.svg' % muscle.id)
+
+        for muscle in exercise.muscles_secondary.all():
+            if muscle.is_front:
+                backgrounds_front.append('images/muscles/secondary/muscle-%s.svg' % muscle.id)
+            else:
+                backgrounds_back.append('images/muscles/secondary/muscle-%s.svg' % muscle.id)
+
+        # Append the "main" background, with the silhouette of the human body
+        # This has to happen as the last step, so it is rendered behind the muscles.
+        backgrounds_front.append('images/muscles/muscular_system_front.svg')
+        backgrounds_back.append('images/muscles/muscular_system_back.svg')
+        backgrounds = (backgrounds_front, backgrounds_back)
+
+        cache.set(cache_mapper.get_exercise_muscle_bg_key(int(id)),
+                  (backgrounds_front, backgrounds_back))
+
+    template_data['muscle_backgrounds_front'] = backgrounds[0]
+    template_data['muscle_backgrounds_back'] = backgrounds[1]
+
+    # If the user is logged in, load the log and prepare the entries for
+    # rendering in the D3 chart
+    entry_log = []
+    chart_data = []
+    if request.user.is_authenticated():
+        logs = WorkoutLog.objects.filter(user=request.user, exercise=exercise)
+        entry_log, chart_data = process_log_entries(logs)
+
+    template_data['logs'] = entry_log
+    template_data['json'] = chart_data
+    template_data['svg_uuid'] = str(uuid.uuid4())
+
+    return render(request, 'exercise/exercise-detail.html', template_data)
+
 
 class ExercisesEditAddView(WgerFormMixin):
     '''
