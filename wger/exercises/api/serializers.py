@@ -45,6 +45,17 @@ class EquipmentSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
+class ExerciseCommentSerializer(serializers.ModelSerializer):
+    '''
+    ExerciseComment serializer
+    '''
+    exercise = serializers.StringRelatedField()
+
+    class Meta:
+        model = ExerciseComment
+        fields = ('id', 'exercise', 'comment')
+
+
 class ExerciseSerializer(serializers.ModelSerializer):
     '''
     Exercise serializer
@@ -52,6 +63,7 @@ class ExerciseSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     category = serializers.StringRelatedField()
     description = serializers.CharField(source='description_clean')
+    language = serializers.StringRelatedField()
     muscles = serializers.SlugRelatedField(many=True,
                                            read_only=True,
                                            slug_field='name')
@@ -68,7 +80,8 @@ class ExerciseSerializer(serializers.ModelSerializer):
     # Alternative to serialize all equipment attributes
     # equipment = EquipmentSerializer(many=True, read_only=True)
     status = serializers.CharField(source='status_description')
-    language = serializers.StringRelatedField()
+    image = serializers.ImageField()
+    comment = ExerciseCommentSerializer(many=True, read_only=True)
     license = serializers.StringRelatedField()
 
     class Meta:
@@ -89,11 +102,3 @@ class ExerciseImageSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = ExerciseImage
-
-
-class ExerciseCommentSerializer(serializers.ModelSerializer):
-    '''
-    ExerciseComment serializer
-    '''
-    class Meta:
-        model = ExerciseComment
