@@ -15,10 +15,6 @@
 {#       #}
 {% block title %} {{ object }} ({% trans "Compare workouts" %}) {% endblock %}
 
-{% block header %}
-<script src="{% static 'js/groups.js' %}"></script>
-{% endblock %}
-
 {#         #}
 {# Content #}
 {#         #}
@@ -29,10 +25,13 @@
             <div class="list-group-item">
                 <a href="{{ workout.get_absolute_url }}">
                     {{ workout }}
-                     {% if workout.user == user%}
+                     {% if workout.user == user %}
                          <span class="label label-success">{% trans "Owner" %}
                          </span>
-                        {% endif %}
+                     {% else %}
+                        <span class="label label-warning">{{ workout.user }}
+                         </span>
+                     {% endif %}
                 </a>
                 <br>
                 <!-- Workout Log -->
@@ -40,7 +39,6 @@
                     {% trans "Log" %}
                 </a>
                 <div class="workout-log" data-url="{{ workout.get_log_url }}">
-
                 </div>
             <!-- End Workout Log -->
                 <div>Workout content</div>
@@ -53,8 +51,6 @@
 
 {% endblock %}
 {# End block Content #}
-
-
 
 {#         #}
 {# Sidebar #}

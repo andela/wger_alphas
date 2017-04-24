@@ -1,5 +1,6 @@
-{% load i18n staticfiles wger_extras %}
+{% load i18n staticfiles wger_extras django_bootstrap_breadcrumbs %}
 {% if workout.comment %}
+
 <p>
     <strong>{% trans "Goal" %}:</strong> {{workout.comment}}
 </p>
@@ -8,6 +9,7 @@
 {% for day in workout.canonical_representation.day_list %}
     <h4>{{ day.obj.description }}</h4>
 
+    {% block add_weight_log %}
     {% if is_owner %}
     <p>
         <a href="{% url 'manager:day:log' day.obj.id %}" class="btn btn-success btn-sm">
@@ -15,6 +17,7 @@
         </a>
     </p>
     {% endif %}
+    {% endblock %}
 
     {% for set in day.set_list %}
     {% for exercise in set.exercise_list %}

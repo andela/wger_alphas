@@ -6,3 +6,4 @@
 /wger/core/static/bower_components/
 /wger/core/static/js/Sortable.min.js
 /wger/node_modules/
+!/wger/settings_global.py

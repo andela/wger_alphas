@@ -307,10 +307,9 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'wger-cache',
-        'TIMEOUT': 30 * 24 * 60 * 60,  # Cache for a month
+        'TIMEOUT': 3,  # Cache for a month
     }
 }
-
 
 #
 # Easy thumbnails
@@ -338,8 +337,9 @@ THUMBNAIL_ALIASES = {
 #
 # Django compressor
 #
-STATIC_ROOT = BASE_DIR
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR + STATIC_URL
+
 
 # The default is not DEBUG, override if needed
 # COMPRESS_ENABLED = True
