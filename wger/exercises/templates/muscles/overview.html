@@ -1,5 +1,5 @@
 {% extends "base_wide.html" %}
-{% load i18n staticfiles cache wger_extras %}
+{% load i18n staticfiles cache wger_extras svg %}
 
 <!--
         Title
@@ -60,14 +60,25 @@ $(document).ready(function() {
 -->
 {% block content %}
 {% cache cache_timeout muscle-overview language.id %}
-{% trans "Hover with the mouse over the muscles to show corresponding exercises." %}
-
+{% trans "Hover with the mouse over the muscles or muscle names to show corresponding muscle image. Click on the muscle or muscle name to show the corresponding exercises." %}
 <div class="row">
     <div class="col-sm-4 col-xs-6">
         <h4 style="padding-bottom:0.5em;">{% trans "Muscles" %}</h4>
+        <div class="muscle-svg front-muscle">
+            {% svg 'muscle-front' %}
+        </div>
+        <div class="muscle-svg back-muscle">
+            {% svg 'muscle-back' %}
+        </div>
+
+
         <div id="muscle-system"
              class="muscle-background"
-             style="background-image: url('/static/images/muscles/muscular_system_front.svg');">
+             style="background-image: url('/static/images/muscles/muscular_system_front.svg'); color: blue;">
+        </div>
+        <div id="muscle-direction">
+            <div id="set-back">View Back</div>
+            <div id="set-front">View Front</div>
         </div>
     </div>
     <div class="col-sm-4 col-xs-6">
@@ -133,6 +144,8 @@ $(document).ready(function() {
 </div>
 {% endcache %}
 {% endblock %}
+
+
 
 
 <!--

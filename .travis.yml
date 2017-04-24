@@ -51,6 +51,8 @@ before_script:
 
 # Do the tests
 script:
+  # Formatting
+  #  - pep8 wger
   # Javascript linting
   - npm install gulp-eslint
 

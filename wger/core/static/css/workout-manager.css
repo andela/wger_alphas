@@ -133,10 +133,30 @@ a:hover img
  */
 div.muscle-background
 {
-    width: 180px;
-    height: 276px;
-    background-size: 150px;
+    width: 200px;
+    height: 370px;
+    background-size: 200px;
     background-repeat: no-repeat;
+}
+
+.muscle-svg{
+    position: absolute;
+}
+
+.muscle-svg.back-muscle {
+    display: none;
+}
+
+.muscle-svg.back-muscle, .muscle-svg.front-muscle {
+
+    width: 200px;
+    height: 370px;
+    background-size: 200px;
+    background-repeat: no-repeat;
+}
+
+.muscle-svg.back-muscle path, .muscle-svg.front-muscle path{
+    opacity: 0 !important;
 }
 
 /*
@@ -293,6 +313,31 @@ div.info a, div.info a:hover, div.info a:active{
     margin-top: 0;
 }
 
-.muscle:hover{
-    background: #eee !important;
+.muscle-hover{
+    background-color: #ddd !important;
 }
+
+.muscle-not-hover{
+    background-color: transparent;
+}
+
+#muscle-direction {
+    margin-top: 20px;
+    padding: 0 30px;
+    width: 200px;
+}
+
+#muscle-direction div {
+    cursor: pointer;
+    background: #eee;
+    border-radius: 3px;
+    width: 90px;
+    margin: 0 auto;
+    padding: 5px;
+    text-align: center;
+}
+
+#muscle-direction div:hover {
+    background: #ddd;
+}
+
