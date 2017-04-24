@@ -25,12 +25,15 @@ from wger.exercises.models import (
 )
 
 
-class ExerciseSerializer(serializers.ModelSerializer):
+class MuscleSerializer(serializers.ModelSerializer):
     '''
-    Exercise serializer
+    Muscle serializer
     '''
+    name = serializers.CharField()
+
     class Meta:
-        model = Exercise
+        model = Muscle
+        fields = ('id', 'name', 'is_front')
 
 
 class EquipmentSerializer(serializers.ModelSerializer):
@@ -39,6 +42,37 @@ class EquipmentSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = Equipment
+        fields = ('id', 'name')
+
+
+class ExerciseSerializer(serializers.ModelSerializer):
+    '''
+    Exercise serializer
+    '''
+    name = serializers.CharField()
+    category = serializers.StringRelatedField()
+    description = serializers.CharField(source='description_clean')
+    muscles = serializers.SlugRelatedField(many=True,
+                                           read_only=True,
+                                           slug_field='name')
+    # Alternative to serialize all muscles attributes
+    # muscles = MuscleSerializer(many=True, read_only=True)
+    muscles_secondary = serializers.SlugRelatedField(many=True,
+                                                     read_only=True,
+                                                     slug_field='name')
+    # Alternative to serialize all secondary_muscles attributes
+    # muscles_secondary = MuscleSerializer(many=True, read_only=True)
+    equipment = serializers.SlugRelatedField(many=True,
+                                             read_only=True,
+                                             slug_field='name')
+    # Alternative to serialize all equipment attributes
+    # equipment = EquipmentSerializer(many=True, read_only=True)
+    status = serializers.CharField(source='status_description')
+    language = serializers.StringRelatedField()
+    license = serializers.StringRelatedField()
+
+    class Meta:
+        model = Exercise
 
 
 class ExerciseCategorySerializer(serializers.ModelSerializer):
@@ -63,11 +97,3 @@ class ExerciseCommentSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = ExerciseComment
-
-
-class MuscleSerializer(serializers.ModelSerializer):
-    '''
-    Muscle serializer
-    '''
-    class Meta:
-        model = Muscle
