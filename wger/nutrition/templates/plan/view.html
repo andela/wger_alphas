@@ -75,8 +75,9 @@ function wgerCustomModalInit()
 
             {% if is_owner %}
             <div class="editoptions">
-                <a href="{% url 'nutrition:meal:delete' meal.id %}"
-                   title="{% trans 'Delete' %}">
+                <a href="{% url 'nutrition:meal:delete' pk=meal.id %}"
+                   title="{% trans 'Delete' %}"
+                   class="wger-modal-dialog">
                    <span class="{% fa_class 'trash' %}"></span></a>
                 <a href="{% url 'nutrition:meal:edit' meal.id %}"
                    title="{% trans 'Edit' %}"
@@ -99,9 +100,9 @@ function wgerCustomModalInit()
 
             {% if is_owner %}
             <span class="editoptions">
-                <a href="{% url 'nutrition:meal_item:delete' item.id %}"
+                <a href="{% url 'nutrition:meal_item:delete' pk=item.id %}"
                    title="{% trans 'Delete' %}"
-                   class="delete-mealitem">
+                   class="wger-modal-dialog">
                    <span class="{% fa_class 'trash' %}"></span></a>
                 <a href="{% url 'nutrition:meal_item:edit' item.id %}"
                    title="{% trans 'Edit' %}"
@@ -114,10 +115,28 @@ function wgerCustomModalInit()
             <td class="align-right">{{item.get_nutritional_values.protein|floatformat}}</td>
             <td class="align-right">{{item.get_nutritional_values.carbohydrates|floatformat}}</td>
             <td class="align-right">{{item.get_nutritional_values.fat|floatformat}}</td>
-</tr>
+    </tr>
     {% empty %}
     {% if is_owner %}
     <tr>
+        <td>
+            <strong>
+            {% trans "Nr."%} {{ forloop.counter }}
+            {% if meal.time %} &ndash; {{meal.time|time:"H:i"}}{% endif %}
+            </strong>
+            <div class="editoptions">
+                <a href="{% url 'nutrition:meal:delete' pk=meal.id %}"
+                   title="{% trans 'Delete' %}"
+                   class="wger-modal-dialog">
+                   <span class="{% fa_class 'trash' %}"></span>
+                </a>
+                <a href="{% url 'nutrition:meal:edit' meal.id %}"
+                   title="{% trans 'Edit' %}"
+                   class="wger-modal-dialog">
+                    <span class="{% fa_class 'pencil-square-o' %}"></span>
+                </a>
+            </div>
+        </td>
         <td colspan="7">
            <a href="{% url 'nutrition:meal_item:add' meal.id %}"
               title="{% trans 'Add one now.' %}"
