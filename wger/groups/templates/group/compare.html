@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load i18n staticfiles wger_extras thumbnail django_bootstrap_breadcrumbs activity_tags %}
 
@@ -62,7 +63,7 @@
     <p>{% trans "Choose a member to compare workouts with" %}</p>
     <ul class="list-group">
     {% for membership in memberships_list %}
-    <li class="list-group-item ">
+    <li class="list-group-item member-compare">
 
         {{ membership.user|format_username }}
         {% if membership.is_admin %}
