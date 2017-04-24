@@ -81,6 +81,11 @@ class Workout(models.Model):
         """
         return reverse('manager:workout:view', kwargs={'pk': self.id})
 
+    def get_log_url(self):
+        """
+        Returns the canonical URL to view a workout log
+        """
+        return reverse('manager:log:log', kwargs={'pk': self.id})
 
     def __str__(self):
         """

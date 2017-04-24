@@ -15,6 +15,10 @@
 {#       #}
 {% block title %} {{ object }} ({% trans "Compare workouts" %}) {% endblock %}
 
+{% block header %}
+<script src="{% static 'js/groups.js' %}"></script>
+{% endblock %}
+
 {#         #}
 {# Content #}
 {#         #}
@@ -31,25 +35,13 @@
                         {% endif %}
                 </a>
                 <br>
-
                 <!-- Workout Log -->
+                <a href="{{ workout.get_log_url }}">
+                    {% trans "Log" %}
+                </a>
+                <div class="workout-log" data-url="{{ workout.get_log_url }}">
 
-                {% for day in workout.canonical_representation.day_list %}
-                <h4>{{ day.obj.description }}</h4>
-
-                {% for set in day.set_list %}
-
-                {% for exercise in set.exercise_list %}
-                    Exercise: {{ exercise }}
-
-
-                {% empty%}
-                <p>
-                    <em>{% trans "No exercises for this day." %}</em>
-                </p>
-                {% endfor %}
-                {% endfor %}
-            {% endfor %}
+                </div>
             <!-- End Workout Log -->
                 <div>Workout content</div>
 
