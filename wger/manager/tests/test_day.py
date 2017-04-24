@@ -18,6 +18,7 @@ from django.core.urlresolvers import reverse
 from wger.core.tests.base_testcase import WorkoutManagerAddTestCase
 from wger.core.tests.base_testcase import WorkoutManagerEditTestCase
 from wger.core.tests.base_testcase import WorkoutManagerTestCase
+from wger.core.tests.base_testcase import WorkoutManagerDeleteTestCase
 from wger.manager.models import Day
 from wger.utils.cache import cache_mapper
 
@@ -47,53 +48,15 @@ class AddWorkoutDayTestCase(WorkoutManagerAddTestCase):
             'day': [1, 4]}
 
 
-class DeleteWorkoutDayTestCase(WorkoutManagerTestCase):
+class DeleteWorkoutDayTestCase(WorkoutManagerDeleteTestCase):
     '''
     Tests deleting a day
     '''
-
-    def delete_day(self, fail=False):
-        '''
-        Helper function to test deleting a day
-        '''
-
-        # Fetch the day edit page
-        count_before = Day.objects.count()
-        response = self.client.get(reverse('manager:day:delete', kwargs={'pk': 5}))
-        count_after = Day.objects.count()
-
-        if fail:
-            self.assertIn(response.status_code, (302, 404))
-            self.assertTemplateUsed('login.html')
-            self.assertEqual(count_before, count_after)
-
-        else:
-            self.assertRaises(Day.DoesNotExist, Day.objects.get, pk=5)
-            self.assertEqual(response.status_code, 302)
-            self.assertEqual(count_before - 1, count_after)
-
-    def test_delete_day_anonymous(self):
-        '''
-        Test deleting a day as an anonymous user
-        '''
-
-        self. delete_day(fail=True)
-
-    def test_delete_workout_owner(self):
-        '''
-        Test deleting a day as the owner user
-        '''
-
-        self.user_login('test')
-        self.delete_day(fail=False)
-
-    def test_delete_workout_other(self):
-        '''
-        Test deleting a day as a different logged in user
-        '''
-
-        self.user_login('admin')
-        self.delete_day(fail=True)
+    object_class = Day
+    url = 'manager:day:delete'
+    pk = 5
+    user_success = 'test'
+    user_fail = 'admin'
 
 
 class EditWorkoutDayTestCase(WorkoutManagerEditTestCase):
@@ -121,7 +84,8 @@ class RenderWorkoutDayTestCase(WorkoutManagerTestCase):
         '''
 
         # Fetch the day edit page
-        response = self.client.get(reverse('manager:day:view', kwargs={'id': 5}))
+        response = self.client.get(reverse(
+            'manager:day:view', kwargs={'id': 5}))
 
         if fail:
             self.assertIn(response.status_code, (302, 404))
@@ -166,10 +130,12 @@ class WorkoutCacheTestCase(WorkoutManagerTestCase):
         '''
         day = Day.objects.get(pk=1)
         day.canonical_representation
-        self.assertTrue(cache.get(cache_mapper.get_workout_canonical(day.training_id)))
+        self.assertTrue(cache.get(
+            cache_mapper.get_workout_canonical(day.training_id)))
 
         day.save()
-        self.assertFalse(cache.get(cache_mapper.get_workout_canonical(day.training_id)))
+        self.assertFalse(cache.get(
+            cache_mapper.get_workout_canonical(day.training_id)))
 
     def test_canonical_form_cache_delete(self):
         '''
@@ -177,10 +143,12 @@ class WorkoutCacheTestCase(WorkoutManagerTestCase):
         '''
         day = Day.objects.get(pk=1)
         day.canonical_representation
-        self.assertTrue(cache.get(cache_mapper.get_workout_canonical(day.training_id)))
+        self.assertTrue(cache.get(
+            cache_mapper.get_workout_canonical(day.training_id)))
 
         day.delete()
-        self.assertFalse(cache.get(cache_mapper.get_workout_canonical(day.training_id)))
+        self.assertFalse(cache.get(
+            cache_mapper.get_workout_canonical(day.training_id)))
 
 
 class DayTestCase(WorkoutManagerTestCase):

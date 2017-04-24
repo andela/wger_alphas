@@ -16,13 +16,16 @@
 
 import logging
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms.models import modelformset_factory, inlineformset_factory
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext_lazy, ugettext as _
 from django.db import models
 from django.contrib.auth.decorators import login_required
+from django.views.generic import DeleteView
 
 from wger.manager.models import (
     Day,
@@ -37,6 +40,7 @@ from wger.manager.forms import (
 )
 from wger.utils.language import load_item_languages
 from wger.config.models import LanguageConfig
+from wger.utils.generic_views import WgerDeleteMixin
 
 logger = logging.getLogger(__name__)
 
@@ -57,8 +61,8 @@ SettingFormset = modelformset_factory(Setting,
 @login_required
 def create(request, day_pk):
     '''
-    Creates a new set. This view handles both the set form and the corresponding
-    settings formsets
+    Creates a new set. This view handles both the set form and the
+    corresponding settings formsets
     '''
     day = get_object_or_404(Day, pk=day_pk)
     if day.get_owner_object().user != request.user:
@@ -81,8 +85,8 @@ def create(request, day_pk):
     # by language and status
     if request.flavour == 'mobile':
         languages = load_item_languages(LanguageConfig.SHOW_ITEM_EXERCISES)
-        form.fields['exercise_list'].queryset = Exercise.objects.accepted() \
-                                                        .filter(language__in=languages)
+        form.fields['exercise_list'].queryset = (
+            Exercise.objects.accepted().filter(language__in=languages))
 
     # If the form and all formsets validate, save them
     if request.method == "POST":
@@ -91,7 +95,8 @@ def create(request, day_pk):
             for exercise in form.cleaned_data['exercises']:
                 formset = SettingFormset(request.POST,
                                          queryset=Setting.objects.none(),
-                                         prefix='exercise{0}'.format(exercise.id))
+                                         prefix='exercise{0}'.format(
+                                             exercise.id))
                 formsets.append({'exercise': exercise, 'formset': formset})
         all_valid = True
 
@@ -100,8 +105,10 @@ def create(request, day_pk):
                 all_valid = False
 
         if form.is_valid() and all_valid:
-            # Manually take care of the order, TODO: better move this to the model
-            max_order = day.set_set.select_related().aggregate(models.Max('order'))
+            # Manually take care of the order, TODO:
+            # better move this to the model
+            max_order = day.set_set.select_related().aggregate(
+                models.Max('order'))
             form.instance.order = (max_order['order__max'] or 0) + 1
             form.instance.exerciseday = day
             set_obj = form.save()
@@ -114,8 +121,9 @@ def create(request, day_pk):
                     instance.exercise = formset['exercise']
                     instance.save()
 
-            return HttpResponseRedirect(reverse('manager:workout:view',
-                                        kwargs={'pk': day.get_owner_object().id}))
+            return HttpResponseRedirect(reverse(
+                'manager:workout:view',
+                kwargs={'pk': day.get_owner_object().id}))
         else:
             logger.debug(form.errors)
 
@@ -124,8 +132,10 @@ def create(request, day_pk):
     context['day'] = day
     context['max_sets'] = Set.MAX_SETS
     context['formsets'] = formsets
-    context['form_action'] = reverse('manager:set:add', kwargs={'day_pk': day_pk})
-    context['extend_template'] = 'base_empty.html' if request.is_ajax() else 'base.html'
+    context['form_action'] = reverse('manager:set:add',
+                                     kwargs={'day_pk': day_pk})
+    context['extend_template'] = 'base_empty.html' if request.is_ajax() \
+                                 else 'base.html'
     return render(request, 'set/add.html', context)
 
 
@@ -149,22 +159,26 @@ def get_formset(request, exercise_pk, reps=Set.DEFAULT_SETS):
                    'exercise': exercise})
 
 
-@login_required
-def delete(request, pk):
+class SetDeleteView(WgerDeleteMixin, LoginRequiredMixin, DeleteView):
     '''
-    Deletes the given set
+    Generic view to delete a workout set
     '''
+    model = Set
+    fields = ('exercises',)
+    messages = ugettext_lazy('Successfully deleted')
+    form_action_urlname = 'manager:set:delete'
 
-    # Load the set
-    set_obj = get_object_or_404(Set, pk=pk)
+    def get_context_data(self, **kwargs):
+        context = super(SetDeleteView, self).get_context_data(**kwargs)
+        context['form_action'] = reverse(
+            'manager:set:delete', kwargs={'pk': self.object.id})
+        context['title'] = _(u"Delete '{0}'?").format(self.object)
 
-    # Check if the user is the owner of the object
-    if set_obj.get_owner_object().user == request.user:
-        set_obj.delete()
-        return HttpResponseRedirect(reverse('manager:workout:view',
-                                            kwargs={'pk': set_obj.get_owner_object().id}))
-    else:
-        return HttpResponseForbidden()
+        return context
+
+    def get_success_url(self):
+        return reverse('manager:workout:view',
+                       kwargs={'pk': self.object.exerciseday.training_id})
 
 
 @login_required
@@ -179,7 +193,8 @@ def edit(request, pk):
     formsets = []
     for exercise in set_obj.exercises.all():
         queryset = Setting.objects.filter(set=set_obj, exercise=exercise)
-        formset = SettingFormset(queryset=queryset, prefix='exercise{0}'.format(exercise.id))
+        formset = SettingFormset(
+            queryset=queryset, prefix='exercise{0}'.format(exercise.id))
         formsets.append({'exercise': exercise, 'formset': formset})
 
     if request.method == "POST":
@@ -216,8 +231,9 @@ def edit(request, pk):
                         instance.exercise = formset['exercise']
                         instance.save()
 
-            return HttpResponseRedirect(reverse('manager:workout:view',
-                                        kwargs={'pk': set_obj.get_owner_object().id}))
+            return HttpResponseRedirect(reverse(
+                'manager:workout:view',
+                kwargs={'pk': set_obj.get_owner_object().id}))
 
     # Other context we need
     context = {}

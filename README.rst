@@ -67,8 +67,8 @@ Then install the python packages from pypi in the virtualenv::
  $ cd wger
  $ pip install -r requirements.txt  # or requirements_devel.txt to develop
  $ invoke create_settings \
-          --settings-path /home/wger/wger/settings.py \
-          --database-path /home/wger/wger/database.sqlite
+          --settings-path ./wger/settings.py \
+          --database-path ./wger/database.sqlite
  $ invoke bootstrap_wger \
           --settings-path ./wger/settings.py \
           --no-start-server

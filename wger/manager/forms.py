@@ -59,9 +59,10 @@ from wger.utils.widgets import Html5DateInput
 
 
 class DemoUserForm(Form):
-    captcha = ReCaptchaField(attrs={'theme': 'clean'},
-                             label=_('Confirmation text'),
-                             help_text=_('As a security measure, please enter the previous words'),)
+    captcha = ReCaptchaField(
+        attrs={'theme': 'clean'},
+        label=_('Confirmation text'),
+        help_text=_('As a security measure, please enter the previous words'),)
 
 
 class WorkoutForm(ModelForm):
@@ -71,9 +72,10 @@ class WorkoutForm(ModelForm):
 
 
 class WorkoutCopyForm(Form):
-    comment = CharField(max_length=100,
-                        help_text=_('The goal or description of the new workout.'),
-                        required=False)
+    comment = CharField(
+        max_length=100,
+        help_text=_('The goal or description of the new workout.'),
+        required=False)
 
 
 class DayForm(ModelForm):
@@ -94,8 +96,9 @@ class SetForm(ModelForm):
     # https://code.djangoproject.com/ticket/9321
     def __init__(self, *args, **kwargs):
         super(SetForm, self).__init__(*args, **kwargs)
-        self.fields['exercises'].help_text = _('You can search for more than one exercise, '
-                                               'they will be grouped together for a superset.')
+        self.fields['exercises'].help_text = _(
+            'You can search for more than one exercise, '
+            'they will be grouped together for a superset.')
 
 
 class SetFormMobile(ModelForm):
@@ -119,8 +122,9 @@ class SetFormMobile(ModelForm):
     # https://code.djangoproject.com/ticket/9321
     def __init__(self, *args, **kwargs):
         super(SetFormMobile, self).__init__(*args, **kwargs)
-        self.fields['exercise_list'].help_text = _('You can search for more than one exercise, '
-                                                   'they will be grouped together for a superset.')
+        self.fields['exercise_list'].help_text = _(
+            'You can search for more than one exercise, '
+            'they will be grouped together for a superset.')
 
 
 class SettingForm(ModelForm):

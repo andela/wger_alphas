@@ -162,5 +162,6 @@ $(document).ready(function (){
         setMuscleDirection('back');
         $('#muscle-direction #set-back').hide();
         $('#muscle-direction #set-front').show();
+
     });
 });

@@ -335,7 +335,7 @@ THUMBNAIL_ALIASES = {
 #
 # Django compressor
 #
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 SVG_DIRS = [
     os.path.join(BASE_DIR, 'core/static/images/muscles/main')
