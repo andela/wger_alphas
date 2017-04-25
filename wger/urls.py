@@ -77,6 +77,7 @@ v1_api.register(weight_api.WeightEntryResource())
 v1_api.register(core_api.LanguageResource())
 v1_api.register(core_api.DaysOfWeekResource())
 v1_api.register(core_api.UserProfileResource())
+v1_api.register(core_api.UserResource())
 v1_api.register(core_api.LicenseResource())
 
 
@@ -102,6 +103,8 @@ router.register(
 # Core app
 router.register(r'userprofile', core_api_views.UserProfileViewSet,
                 base_name='userprofile')
+router.register(r'user', core_api_views.UserViewSet,
+                base_name='user')
 router.register(r'language', core_api_views.LanguageViewSet,
                 base_name='language')
 router.register(r'daysofweek', core_api_views.DaysOfWeekViewSet,

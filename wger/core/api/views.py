@@ -72,7 +72,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
 class UserViewSet(viewsets.ModelViewSet):
     '''
-    API endpoint for workout objects
+    API endpoint for user objects
     '''
     is_private = True
     serializer_class = UserSerializer
