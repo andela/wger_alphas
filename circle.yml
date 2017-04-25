@@ -5,8 +5,6 @@ dependencies:
     pre:
         - pip install -r requirements_devel.txt
         - invoke create_settings --settings-path ./wger/settings.py --database-path ./wger/database.sqlite
-        - yes "yes" | python manage.py makemigrations --merge --settings=wger.settings
-        - python manage.py migrate --settings=wger.settings
         - invoke bootstrap_wger --settings-path ./wger/settings.py --no-start-server
 
 test:
