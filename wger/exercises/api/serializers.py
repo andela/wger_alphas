@@ -25,12 +25,15 @@ from wger.exercises.models import (
 )
 
 
-class ExerciseSerializer(serializers.ModelSerializer):
+class MuscleSerializer(serializers.ModelSerializer):
     '''
-    Exercise serializer
+    Muscle serializer
     '''
+    name = serializers.CharField()
+
     class Meta:
-        model = Exercise
+        model = Muscle
+        fields = ('id', 'name', 'is_front')
 
 
 class EquipmentSerializer(serializers.ModelSerializer):
@@ -39,14 +42,18 @@ class EquipmentSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = Equipment
+        fields = ('id', 'name')
 
 
-class ExerciseCategorySerializer(serializers.ModelSerializer):
+class ExerciseCommentSerializer(serializers.ModelSerializer):
     '''
-    ExerciseCategory serializer
+    ExerciseComment serializer
     '''
+    exercise = serializers.StringRelatedField()
+
     class Meta:
-        model = ExerciseCategory
+        model = ExerciseComment
+        fields = ('id', 'exercise', 'comment')
 
 
 class ExerciseImageSerializer(serializers.ModelSerializer):
@@ -57,17 +64,51 @@ class ExerciseImageSerializer(serializers.ModelSerializer):
         model = ExerciseImage
 
 
-class ExerciseCommentSerializer(serializers.ModelSerializer):
+class ExerciseSerializer(serializers.ModelSerializer):
     '''
-    ExerciseComment serializer
+    Exercise serializer
     '''
+    name = serializers.CharField()
+    category = serializers.StringRelatedField()
+    description = serializers.CharField(source='description_clean')
+    language = serializers.StringRelatedField()
+    muscles = serializers.SlugRelatedField(many=True,
+                                           read_only=True,
+                                           slug_field='name')
+    # Alternative to serialize all muscles attributes
+    # muscles = MuscleSerializer(many=True, read_only=True)
+
+    muscles_secondary = serializers.SlugRelatedField(many=True,
+                                                     read_only=True,
+                                                     slug_field='name')
+    # Alternative to serialize all secondary_muscles attributes
+    # muscles_secondary = MuscleSerializer(many=True, read_only=True)
+
+    equipment = serializers.SlugRelatedField(many=True,
+                                             read_only=True,
+                                             slug_field='name')
+    # Alternative to serialize all equipment attributes
+    # equipment = EquipmentSerializer(many=True, read_only=True)
+
+    status = serializers.CharField(source='status_description')
+    image = serializers.ImageField(source='main_image')
+    exercisecomment_set = serializers.SlugRelatedField(many=True,
+                                                       read_only=True,
+                                                       slug_field='comment')
+    license = serializers.StringRelatedField()
+
     class Meta:
-        model = ExerciseComment
+        model = Exercise
+
+    def to_representation(self, obj):
+        primitive_repr = super(ExerciseSerializer, self).to_representation(obj)
+        primitive_repr['comment'] = primitive_repr.pop('exercisecomment_set')
+        return primitive_repr
 
 
-class MuscleSerializer(serializers.ModelSerializer):
+class ExerciseCategorySerializer(serializers.ModelSerializer):
     '''
-    Muscle serializer
+    ExerciseCategory serializer
     '''
     class Meta:
-        model = Muscle
+        model = ExerciseCategory
