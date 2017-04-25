@@ -23,6 +23,10 @@ $(function() {
             filterExercises(hash)
         });
 
+        $("#show-all-exercises").click(function() {
+            $(".list-group .workout-item").show();
+        });
+
     });
 
     function filterExercises(property) {
