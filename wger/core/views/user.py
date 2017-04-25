@@ -67,7 +67,7 @@ from wger.gym.models import (
     GymUserConfig,
     Contract
 )
-
+from wger.settings import SITE_URL
 logger = logging.getLogger(__name__)
 
 
@@ -534,33 +534,37 @@ class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
                                  'users': context['object_list']['members']}
         return context
 
+
 @login_required
 def fitbit_support(request):
-    client_secret="9e0dcb6bce27750ed06ddb86df2e798d"
+    data = {}
+    client_secret = "9e0dcb6bce27750ed06ddb86df2e798d"
     client_id = "2288D5"
+    redirect_uri = SITE_URL + reverse("core:user:fitbit_support")
+    prompt = "login"
     fitbit_client = fitbit.FitbitOauth2Client(client_id, client_secret)
-    rv = request.GET
-    if 'code' in rv:
-        code = rv.get('code', "")
+
+    if 'code' in request.GET:
+        code = request.GET['code']
         payload = {
             "client_id": client_id,
             "client_secret": client_secret,
             "code": code,
-            "redirect_uri": "http://127.0.0.1:8000/en/dashboard",
+            "redirect_uri": redirect_uri,
             "grant_type": "authorization_code"
         }
         headers = {
             "Authorization": "Basic MjI4OEQ1OjllMGRjYjZiY2UyNzc1MGVkMDZkZGI4NmRmMmU3OThk",
             "Content-Type": "application/x-www-form-urlencoded"
         }
-        response  = requests.post(fitbit_client.request_token_url, payload, headers=headers)
-
+        response = requests.post(fitbit_client.request_token_url, payload, headers=headers).json()
+        print(response)
         if 'access_token' in response:
             access_token = response.get('access_token', "")
             user_id = response.get('user_id')
             headers["Authorization"] = "Bearer " + access_token
             new_response = requests.get("https://api.fitbit.com/1/user/"+user_id+"/profile.json", headers=headers)
-            weight = new_response.json["user"]["weight"]
+            weight = new_response.json()["user"]["weight"]
             try:
                 weight_entry = WeightEntry()
                 weight_entry.date = datetime.date.today()
@@ -569,11 +573,14 @@ def fitbit_support(request):
                 weight_entry.save()
                 messages.success(request, _('Weight saved successfully.'))
             except Exception as error:
-                if error == 'UNIQUE constraint failed':
+                if str(error) == 'UNIQUE constraint failed':
                     messages.warning(request, _('You have already synced your weight'))
+            return HttpResponseRedirect(reverse('weight:overview', kwargs={'username': request.user.username}))
 
         else:
-            messages.warning(request, _('You do not have access'))
+            messages.warning(request, _('You do not have access. Your token may have expired.'))
+            return render(request, 'user/fitbit.html', data)
     else:
-        messages.warning(request, _('An error occurred. Try again or contact an admin.'))
-
+        data['fitbit_auth'] = fitbit_client.authorize_token_url(prompt=prompt, redirect_uri=redirect_uri)[0]
+        print(data['fitbit_auth'])
+        return render(request, 'user/fitbit.html', data)
