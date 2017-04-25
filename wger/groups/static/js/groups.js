@@ -56,11 +56,15 @@ $(function() {
             $('.log-div').not($(parent_log_div)).hide();
             $('.list-group-item').not($(parent_list_group)).hide();
 
-            if (parent_list_group.html() === undefined) {
-                $("#no-exercises-match").css({
-                    "display": "block"
+
+            if($('#member-workouts .list-group').children(':visible').length
+             == 0) {
+                console.log("Not visible");
+               $("#no-exercises-match").css({
+                    "display": "block",
                 });
             } else {
+                console.log("visible");
                  $("#no-exercises-match").css({
                     "display": "none"
                 });
@@ -88,11 +92,18 @@ $(function() {
 
             if (parent.html() === undefined) {
                 console.log("Not Parent!")
+                $("#no-exercises-match").css({
+                    "display": "none"
+                });
                 $("#no-member-match").css({
                     "display": "block"
                 });
+
             } else {
                 console.log("Is Parent!:" + parent.html())
+                $("#no-exercises-match").css({
+                    "display": "none"
+                });
                  $("#no-member-match").css({
                     "display": "none"
                 });
