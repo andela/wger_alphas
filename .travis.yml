@@ -57,6 +57,7 @@ script:
   - npm install gulp-eslint
 
   # Regular application
+  - invoke create_settings --settings-path ./wger/settings.py --database-path ./wger/database.sqlite
   - yes "yes" | python manage.py makemigrations --merge --settings=wger.settings
   - python manage.py migrate --settings=wger.settings
   - coverage run --source='.' ./manage.py test
