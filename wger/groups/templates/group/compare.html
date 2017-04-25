@@ -31,8 +31,8 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                         {% for exercise in exercises_list %}
-                            <li>
-                                <a href="#{{ exercise.hash_url }}">
+                            <li class="exercise-filter">
+                                <a href="#ex-{{ exercise.hash_url }}">
                                     {{ exercise.name }}</a>
                             </li>
                         {% endfor %}
@@ -50,8 +50,8 @@
                 <ul class="dropdown-menu" role="menu">
                     {% for membership in memberships_list %}
                         {% if membership.user != user %}
-                        <li>
-                            <a href="#{{ membership.user }}">
+                        <li class="exercise-filter">
+                            <a href="#member-{{ membership.user }}">
                                 <strong>{{ membership.user }}</strong>
                                 ({{ membership.user|format_username }})</a>
                         </li>
@@ -71,8 +71,9 @@
                     <a href="{{ workout.get_absolute_url }}">
                         {{ workout }}
                     </a>
-                    <span class="label label-success">{% trans "Owner" %}
-                             </span>
+                    <span class="label label-success">
+                        {% trans "Owner" %}
+                    </span>
                     <br>
                     <div class="workout-log" data-url="{{ workout.get_log_url }}">
                     </div>
