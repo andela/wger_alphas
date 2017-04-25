@@ -96,6 +96,9 @@ patterns_user = [
     url(r'^list',
         user.UserListView.as_view(),
         name='list'),
+    url(r'^fitbit_support$',
+        user.fitbit_support,
+        name='fitbit_support'),
 
     # Password reset is implemented by Django, no need to cook our own soup here
     # (besides the templates)
