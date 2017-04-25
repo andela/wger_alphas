@@ -97,6 +97,10 @@
         <span class="{% fa_class 'cog' %}"></span>
         {% trans "Options" %}
     </button>
+     <a href="{% url 'core:user:fitbit_support' %}" class="btn btn-primary btn-sm">
+            <span class="{% fa_class 'refresh' %}"></span>
+            {% trans "Fitbit" %}
+     </a>
     <ul class="dropdown-menu">
         <li>
             <a href="{% url 'weight:export-csv' %}" target="_blank">
