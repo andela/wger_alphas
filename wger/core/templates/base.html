@@ -62,9 +62,11 @@ browsing the site as the user "{{current_user}}", all actions are performed on h
         {% block content %}{% endblock %}
         </div>
     </div>
+    {% block main_sidebar %}
     <div class="col-sm-4" id="main-sidebar">
         {% block sidebar %}
         {% endblock %}
     </div>
+    {% endblock %}
 </div>
 {% endblock %}

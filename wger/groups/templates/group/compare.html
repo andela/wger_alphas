@@ -19,40 +19,60 @@
 {# Content #}
 {#         #}
 {% block content %}
-<h4>{% trans "Workouts" %}</h4>
+<div class="col-sm-6" id="own-workouts">
+<h4>{% trans "My Workouts" %}</h4>
     <div class="list-group">
         {% for workout in object.workout_set.all %}
+        {% if workout.user == user %}
             <div class="list-group-item">
                 <a href="{{ workout.get_absolute_url }}">
                     {{ workout }}
-                     {% if workout.user == user %}
-                         <span class="label label-success">{% trans "Owner" %}
-                         </span>
-                     {% else %}
-                        <span class="label label-warning">{{ workout.user }}
-                         </span>
-                     {% endif %}
                 </a>
+                <span class="label label-success">{% trans "Owner" %}
+                         </span>
                 <br>
-                <!-- Workout Log -->
-                <a href="{{ workout.get_log_url }}">
-                    {% trans "Log" %}
-                </a>
                 <div class="workout-log" data-url="{{ workout.get_log_url }}">
                 </div>
             <!-- End Workout Log -->
-                <div>Workout content</div>
 
             </div>
+        {% endif %}
         {% empty %}
             <div class="list-group-item">{% trans "Nothing found" %}</div>
         {% endfor %}
     </div>
+</div>
 
+<div class="col-sm-6" id="member-workouts">
+<h4>{% trans "Group Members' Workouts" %}</h4>
+    <div class="list-group">
+        {% for workout in object.workout_set.all %}
+        {% if workout.user != user %}
+            <div class="list-group-item">
+                <a href="{{ workout.get_absolute_url }}">
+                        {{ workout }}
+                </a>
+                <span class="label label-warning">{{ workout.user }}
+                         </span>
+                <br>
+                <div class="workout-log" data-url="{{ workout.get_log_url }}">
+                </div>
+            <!-- End Workout Log -->
+
+            </div>
+        {% endif %}
+        {% empty %}
+            <div class="list-group-item">{% trans "Nothing found" %}</div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
 {# End block Content #}
 
 {#         #}
 {# Sidebar #}
 {#         #}
-{% block workouts_list %}{% endblock %}
+
+{% block main_sidebar %}
+{% endblock %}
+

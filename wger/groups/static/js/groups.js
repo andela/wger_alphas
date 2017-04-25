@@ -1,6 +1,9 @@
 $(function() {
 
 $( document ).ready(function() {
+    $("#main-content").removeClass("col-sm-8");
+    $("#main-content").addClass("col-sm-12");
+
     $( ".workout-log" ).each(function() {
       var elem = this;
       log_url = $( this ).attr('data-url');
@@ -10,7 +13,6 @@ $( document ).ready(function() {
             var data_obj = $(data).find("#content");
             // Delete Add log buttons from the html
             $(data_obj).find(".btn-success").remove();
-            console.log("Ajax: " + data_obj);
             $(elem).html(data_obj);
         })
 
