@@ -33,7 +33,8 @@ from wger.core.api.serializers import (
     DaysOfWeekSerializer,
     LicenseSerializer,
     RepetitionUnitSerializer,
-    WeightUnitSerializer
+    WeightUnitSerializer,
+    UserSerializer
 )
 from wger.core.api.serializers import UserprofileSerializer
 from wger.utils.permissions import UpdateOnlyPermission, WgerPermission
@@ -69,6 +70,20 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         user = self.get_object().user
         return Response(UsernameSerializer(user).data)
 
+class UserViewSet(viewsets.ModelViewSet):
+    '''
+    API endpoint for workout objects
+    '''
+    is_private = True
+    serializer_class = UserSerializer
+    permission_classes = (WgerPermission, UpdateOnlyPermission)
+    ordering_fields = '__all__'
+
+    def get_queryset(self):
+        '''
+        Only allow access to appropriate objects
+        '''
+        return User.objects.filter(username=self.request.user)
 
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     '''
