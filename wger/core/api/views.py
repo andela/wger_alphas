@@ -19,6 +19,16 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
+from rest_framework import permissions
+
+from django.utils import translation
+from wger.core.models import Language
+from wger.config.models import GymConfig
+from wger.gym.models import (
+    AdminUserNote,
+    GymUserConfig,
+    Contract
+)
 
 from wger.core.models import (
     UserProfile,
@@ -26,7 +36,8 @@ from wger.core.models import (
     DaysOfWeek,
     License,
     RepetitionUnit,
-    WeightUnit)
+    WeightUnit,
+    ApiUser)
 from wger.core.api.serializers import (
     UsernameSerializer,
     LanguageSerializer,
@@ -76,14 +87,45 @@ class UserViewSet(viewsets.ModelViewSet):
     '''
     is_private = True
     serializer_class = UserSerializer
-    permission_classes = (WgerPermission, UpdateOnlyPermission)
+    permission_classes = (WgerPermission, permissions.IsAuthenticatedOrReadOnly)
     ordering_fields = '__all__'
 
     def get_queryset(self):
         '''
         Only allow access to appropriate objects
         '''
-        return User.objects.filter(username=self.request.user)
+        return ApiUser.objects.filter(created_by=self.request.user)
+
+    def perform_create(self, serializer):
+        '''
+        To create new user
+        '''
+        user_data = self.request.data["user"]
+        user = User.objects.create_user(username=user_data["username"],
+                                        password=user_data["password"],
+                                        email=user_data["email"])
+        user.save()
+        # set language
+        language = Language.objects.get(short_name=translation.get_language())
+
+        # create profile for user
+        user.userprofile.notification_language = language
+
+        # set gym
+        gym_config = GymConfig.objects.get(pk=1)
+        if gym_config.default_gym:
+            user.userprofile.gym = gym_config.default_gym
+
+            # Create gym user configuration object
+            config = GymUserConfig()
+            config.gym = gym_config.default_gym
+            config.user = user
+            config.save()
+
+        # save user profile
+        user.userprofile.save()
+
+        serializer.save(created_by=self.request.user, user=user)
 
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     '''
