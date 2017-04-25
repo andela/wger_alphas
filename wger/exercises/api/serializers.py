@@ -56,6 +56,14 @@ class ExerciseCommentSerializer(serializers.ModelSerializer):
         fields = ('id', 'exercise', 'comment')
 
 
+class ExerciseImageSerializer(serializers.ModelSerializer):
+    '''
+    ExerciseImage serializer
+    '''
+    class Meta:
+        model = ExerciseImage
+
+
 class ExerciseSerializer(serializers.ModelSerializer):
     '''
     Exercise serializer
@@ -69,19 +77,32 @@ class ExerciseSerializer(serializers.ModelSerializer):
                                            slug_field='name')
     # Alternative to serialize all muscles attributes
     # muscles = MuscleSerializer(many=True, read_only=True)
+
     muscles_secondary = serializers.SlugRelatedField(many=True,
                                                      read_only=True,
                                                      slug_field='name')
     # Alternative to serialize all secondary_muscles attributes
     # muscles_secondary = MuscleSerializer(many=True, read_only=True)
+
     equipment = serializers.SlugRelatedField(many=True,
                                              read_only=True,
                                              slug_field='name')
     # Alternative to serialize all equipment attributes
     # equipment = EquipmentSerializer(many=True, read_only=True)
+
     status = serializers.CharField(source='status_description')
-    image = serializers.ImageField()
-    comment = ExerciseCommentSerializer(many=True, read_only=True)
+    image = serializers.SlugRelatedField(many=True,
+                                         read_only=True,
+                                         slug_field='image')
+    # Alternative to serialize all image attributes
+    # image = ExerciseImageSerializer(many=True, read_only=True)
+
+    comment = serializers.SlugRelatedField(many=True,
+                                           read_only=True,
+                                           slug_field='comment')
+    # Alternative to serialize all comment attributes
+    # comment = ExerciseCommentSerializer(many=True, read_only=True)
+
     license = serializers.StringRelatedField()
 
     class Meta:
@@ -94,11 +115,3 @@ class ExerciseCategorySerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = ExerciseCategory
-
-
-class ExerciseImageSerializer(serializers.ModelSerializer):
-    '''
-    ExerciseImage serializer
-    '''
-    class Meta:
-        model = ExerciseImage
