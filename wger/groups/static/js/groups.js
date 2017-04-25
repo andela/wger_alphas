@@ -57,7 +57,7 @@ $(function() {
             $('.list-group-item').not($(parent_list_group)).hide();
 
 
-            if($('#member-workouts .list-group').children(':visible').length
+            if($('#member-workouts .list-group').children(":visible").length
              == 0) {
                $("#no-exercises-match").css({
                     "display": "block",
