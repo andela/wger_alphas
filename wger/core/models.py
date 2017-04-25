@@ -78,6 +78,14 @@ class Language(models.Model):
         return False
 
 
+class ApiUser(models.Model):
+    user = models.OneToOneField(User,
+                                editable=False)
+    created_by = models.ForeignKey(User, related_name="api_user_created_by")
+
+    def __str__(self):
+        return "<ApiUser - {}>".format(self.created_by)
+
 @python_2_unicode_compatible
 class UserProfile(models.Model):
     GENDER_MALE = '1'
@@ -312,6 +320,7 @@ by the US Department of Agriculture. It is extremely complete, with around
                                                                MaxValueValidator(30)],
                                                    default=0)
     '''Number of Days for email weight reminder'''
+    user_creation_allowed = models.BooleanField(default=False)
 
     @property
     def weight(self):
