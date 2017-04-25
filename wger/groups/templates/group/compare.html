@@ -67,7 +67,7 @@
         <div class="list-group">
             {% for workout in object.workout_set.all %}
             {% if workout.user == user %}
-                <div class="list-group-item">
+                <div class="list-group-item workout-item">
                     <a href="{{ workout.get_absolute_url }}">
                         {{ workout }}
                     </a>
@@ -92,18 +92,23 @@
         <div class="list-group">
             {% for workout in object.workout_set.all %}
             {% if workout.user != user %}
-                <div class="list-group-item">
+                <div class="list-group-item workout-item">
                     <a href="{{ workout.get_absolute_url }}">
                             {{ workout }}
                     </a>
-                    <span class="label label-warning">{{ workout.user }}
-                             </span>
+                    <span class="label label-warning member-name">
+                        {{ workout.user }}
+                    </span>
                     <br>
                     <div class="workout-log" data-url="{{ workout.get_log_url }}">
                     </div>
                 <!-- End Workout Log -->
 
                 </div>
+                <div class="list-group-item" id="no-exercises-match"
+                         style="display: none;">{% trans "No Matching Exercises" %}</div>
+                <div class="list-group-item" id="no-member-match"
+                     style="display: none;">{% trans "Member has no exercises" %}</div>
             {% endif %}
             {% empty %}
                 <div class="list-group-item">{% trans "Nothing found" %}</div>

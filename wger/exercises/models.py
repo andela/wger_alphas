@@ -271,7 +271,7 @@ class Exercise(AbstractSubmissionModel, AbstractLicenseModel, models.Model):
         """
         Returns the canonical URL to view a workout log
         """
-        hash_url = self.__str__().replace(" ", "_")
+        hash_url = self.get_absolute_url().split("/")[-1]
         return hash_url
 
     def get_dict(self):

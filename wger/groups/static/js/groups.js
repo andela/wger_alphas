@@ -33,16 +33,71 @@ $(function() {
         console.log("Filtering ");
         var exercise = false;
         var member = false;
+
         if (property.indexOf("ex-") == 0) {
             exercise = property.split("ex-")[1];
+            var div = $(".log-div").find("a").filter(function( index ) {
+                var href = $( this ).attr( "href" );
+                var hr =  href.split("/").pop()
+                var elem = false;
+
+                if (exercise === hr){
+                    elem = href
+                    }
+                return elem.length > 0;
+              })
+
+            var parent_log_div = $(div).parents(".log-div");
+            var parent_list_group = $(div).parents(".list-group-item");
+
+            // Show everything first before hiding
+            $('.log-div').show();
+            $('.list-group-item').show();
+            $('.log-div').not($(parent_log_div)).hide();
+            $('.list-group-item').not($(parent_list_group)).hide();
+
+            if (parent_list_group.html() === undefined) {
+                $("#no-exercises-match").css({
+                    "display": "block"
+                });
+            } else {
+                 $("#no-exercises-match").css({
+                    "display": "none"
+                });
+            }
+
         } else if (property.indexOf("member-") == 0) {
             member = property.split("member-")[1];
-        }
-        if (exercise) {
-            console.log("Exercise: " + exercise);
-        } else if (member) {
-            console.log("Member: " + member);
+            var div = $("#member-workouts .workout-item").find(
+            "span.member-name").filter
+            (function( index ) {
+                var username = $(this).text();
+                var elem = false;
 
+                if (username.trim() === member){
+                    elem = $(this)
+                    }
+                return elem.length > 0;
+              })
+
+            var parent = $(div).parents(".workout-item");
+
+            // Show everything first before hiding
+            $("#member-workouts .workout-item").show();
+            $("#member-workouts .workout-item").not($(parent)).hide();
+
+            if (parent.html() === undefined) {
+                console.log("Not Parent!")
+                $("#no-member-match").css({
+                    "display": "block"
+                });
+            } else {
+                console.log("Is Parent!:" + parent.html())
+                 $("#no-member-match").css({
+                    "display": "none"
+                });
+            }
         }
+
     }
 })
