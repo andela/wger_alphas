@@ -14,6 +14,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 
+from django.contrib.auth.models import User
+
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.constants import ALL
 from tastypie.resources import ModelResource
@@ -40,6 +42,23 @@ class UserProfileResource(ModelResource):
 
     class Meta:
         excludes = ('is_temporary', )
+        queryset = UserProfile.objects.all()
+        authentication = ApiKeyAuthentication()
+        authorization = UserObjectsOnlyAuthorization()
+
+
+class UserResource(ModelResource):
+    '''
+    Resource for user
+    '''
+
+    def authorized_read_list(self, object_list, bundle):
+        '''
+        Filter to own objects
+        '''
+        return object_list.filter(username=bundle.request.user)
+
+    class Meta:
         queryset = UserProfile.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = UserObjectsOnlyAuthorization()
