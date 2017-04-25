@@ -13,6 +13,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
+import pprint
 
 from actstream import action
 from actstream.models import target_stream
@@ -170,8 +171,8 @@ class CompareView(DetailView):
         context = super(CompareView, self).get_context_data(**kwargs)
         application = self.object.application_set.filter(user=self.request.user).exists()
         group = self.get_object()
-        member_list = group.get_member_list()
         admin_list = group.get_admins_list()
+        context['exercises_list'] = []
 
         context['last_activity'] = target_stream(self.object)[:20]
         context['application'] = application
@@ -181,24 +182,16 @@ class CompareView(DetailView):
         # This makes it easier to perform some of the comparisons and permission checks
         # and keeps the template clearer, since then we can just iterate over the resulting
         # option lists
-        context['group_dropdown'] = []
-        if self.request.user in member_list:
-            context['group_dropdown'].append([_("Leave group"),
-                                              reverse('groups:member:leave',
-                                                      kwargs={'group_pk': group.pk})])
-            context['is_member'] = True
-        else:
-            context['group_dropdown'].append([_("Join group"),
-                                              reverse('groups:member:join-public',
-                                                      kwargs={'group_pk': group.pk})])
-            context['is_member'] = False
-        if self.request.user in admin_list:
-            context['group_dropdown'].append([_("Edit"),
-                                              reverse('groups:group:edit',
-                                                      kwargs={'pk': group.pk})])
-            context['group_dropdown'].append([_("Delete"),
-                                              reverse('groups:group:delete',
-                                                      kwargs={'pk': group.pk})])
+        for workout in group.workout_set.all():
+            for day in workout.canonical_representation.get('day_list'):
+                for day_set in day.get('set_list'):
+                    for exercise in day_set.get('exercise_list'):
+                        exercise_obj = exercise.get('obj')
+                        exercise_data = {
+                            'name': exercise_obj.name,
+                            'hash_url': exercise_obj.get_hash_url()}
+                        if exercise_data not in context['exercises_list']:
+                            context['exercises_list'].append(exercise_data)
 
         context['memberships_list'] = []
         for membership in group.membership_set.all():
@@ -225,6 +218,9 @@ class CompareView(DetailView):
                                                         'user_pk': membership.user_id})])
 
             context['memberships_list'].append(out)
+        pp = pprint.PrettyPrinter(indent=4)
+        print("\n\n***** Context: ")
+        pp.pprint(context['exercises_list'])
 
         return context
 

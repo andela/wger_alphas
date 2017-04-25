@@ -19,51 +19,95 @@
 {# Content #}
 {#         #}
 {% block content %}
-<div class="col-sm-6" id="own-workouts">
-<h4>{% trans "My Workouts" %}</h4>
-    <div class="list-group">
-        {% for workout in object.workout_set.all %}
-        {% if workout.user == user %}
-            <div class="list-group-item">
-                <a href="{{ workout.get_absolute_url }}">
-                    {{ workout }}
-                </a>
-                <span class="label label-success">{% trans "Owner" %}
-                         </span>
-                <br>
-                <div class="workout-log" data-url="{{ workout.get_log_url }}">
-                </div>
-            <!-- End Workout Log -->
 
+<!-- Filters -->
+<!-- Workout Filters -->
+<div id="compare-view">
+    <div class="col-sm-6">
+        <div class="btn-group pull-right">
+                <button type="button" class="btn btn-default btn-xs dropdown-toggle btn-xs" data-toggle="dropdown">
+                    Filter by Exercises
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                        {% for exercise in exercises_list %}
+                            <li>
+                                <a href="#{{ exercise.hash_url }}">
+                                    {{ exercise.name }}</a>
+                            </li>
+                        {% endfor %}
+                </ul>
             </div>
-        {% endif %}
-        {% empty %}
-            <div class="list-group-item">{% trans "Nothing found" %}</div>
-        {% endfor %}
     </div>
-</div>
 
-<div class="col-sm-6" id="member-workouts">
-<h4>{% trans "Group Members' Workouts" %}</h4>
-    <div class="list-group">
-        {% for workout in object.workout_set.all %}
-        {% if workout.user != user %}
-            <div class="list-group-item">
-                <a href="{{ workout.get_absolute_url }}">
-                        {{ workout }}
-                </a>
-                <span class="label label-warning">{{ workout.user }}
-                         </span>
-                <br>
-                <div class="workout-log" data-url="{{ workout.get_log_url }}">
-                </div>
-            <!-- End Workout Log -->
-
+    <!-- Member Filters -->
+    <div class="col-sm-6">
+        <div class="btn-group pull-right">
+                <button type="button" class="btn btn-default btn-xs dropdown-toggle btn-xs" data-toggle="dropdown">
+                    Filter By Member
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    {% for membership in memberships_list %}
+                        {% if membership.user != user %}
+                        <li>
+                            <a href="#{{ membership.user }}">
+                                <strong>{{ membership.user }}</strong>
+                                ({{ membership.user|format_username }})</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
             </div>
-        {% endif %}
-        {% empty %}
-            <div class="list-group-item">{% trans "Nothing found" %}</div>
-        {% endfor %}
+    </div>
+
+
+    <div class="col-sm-6" id="own-workouts">
+    <h4>{% trans "My Workouts" %}</h4>
+        <div class="list-group">
+            {% for workout in object.workout_set.all %}
+            {% if workout.user == user %}
+                <div class="list-group-item">
+                    <a href="{{ workout.get_absolute_url }}">
+                        {{ workout }}
+                    </a>
+                    <span class="label label-success">{% trans "Owner" %}
+                             </span>
+                    <br>
+                    <div class="workout-log" data-url="{{ workout.get_log_url }}">
+                    </div>
+                <!-- End Workout Log -->
+
+                </div>
+            {% endif %}
+            {% empty %}
+                <div class="list-group-item">{% trans "Nothing found" %}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-sm-6" id="member-workouts">
+    <h4>{% trans "Group Members' Workouts" %}</h4>
+        <div class="list-group">
+            {% for workout in object.workout_set.all %}
+            {% if workout.user != user %}
+                <div class="list-group-item">
+                    <a href="{{ workout.get_absolute_url }}">
+                            {{ workout }}
+                    </a>
+                    <span class="label label-warning">{{ workout.user }}
+                             </span>
+                    <br>
+                    <div class="workout-log" data-url="{{ workout.get_log_url }}">
+                    </div>
+                <!-- End Workout Log -->
+
+                </div>
+            {% endif %}
+            {% empty %}
+                <div class="list-group-item">{% trans "Nothing found" %}</div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}

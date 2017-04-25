@@ -1,9 +1,11 @@
 $(function() {
 
 $( document ).ready(function() {
-    $("#main-content").removeClass("col-sm-8");
-    $("#main-content").addClass("col-sm-12");
 
+    if ($("#compare-view").length) {
+        $("#main-content").removeClass("col-sm-8");
+        $("#main-content").addClass("col-sm-12");
+    }
     $( ".workout-log" ).each(function() {
       var elem = this;
       log_url = $( this ).attr('data-url');

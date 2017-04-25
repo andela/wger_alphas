@@ -267,6 +267,19 @@ class Exercise(AbstractSubmissionModel, AbstractLicenseModel, models.Model):
 
         super(Exercise, self).delete(*args, **kwargs)
 
+    def get_hash_url(self):
+        """
+        Returns the canonical URL to view a workout log
+        """
+        hash_url = self.__str__().replace(" ", "_")
+        return hash_url
+
+    def get_dict(self):
+        """
+        Returns the canonical URL to view a workout log
+        """
+        return self.__dict__
+
     def __str__(self):
         '''
         Return a more human-readable representation
