@@ -373,8 +373,7 @@ class ExerciseImage(
     '''Custom manager'''
 
     exercise = models.ForeignKey(Exercise,
-                                 verbose_name=_('Exercise'),
-                                 related_name='image')
+                                 verbose_name=_('Exercise'))
     '''The exercise the image belongs to'''
 
     image = models.ImageField(verbose_name=_('Image'),
@@ -494,7 +493,6 @@ class ExerciseComment(models.Model):
     '''
     exercise = models.ForeignKey(Exercise,
                                  verbose_name=_('Exercise'),
-                                 related_name='comment',
                                  editable=False)
     comment = models.CharField(
         max_length=200,

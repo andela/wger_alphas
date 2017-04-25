@@ -91,22 +91,19 @@ class ExerciseSerializer(serializers.ModelSerializer):
     # equipment = EquipmentSerializer(many=True, read_only=True)
 
     status = serializers.CharField(source='status_description')
-    image = serializers.SlugRelatedField(many=True,
-                                         read_only=True,
-                                         slug_field='image')
-    # Alternative to serialize all image attributes
-    # image = ExerciseImageSerializer(many=True, read_only=True)
-
-    comment = serializers.SlugRelatedField(many=True,
-                                           read_only=True,
-                                           slug_field='comment')
-    # Alternative to serialize all comment attributes
-    # comment = ExerciseCommentSerializer(many=True, read_only=True)
-
+    image = serializers.ImageField(source='main_image')
+    exercisecomment_set = serializers.SlugRelatedField(many=True,
+                                                       read_only=True,
+                                                       slug_field='comment')
     license = serializers.StringRelatedField()
 
     class Meta:
         model = Exercise
+
+    def to_representation(self, obj):
+        primitive_repr = super(ExerciseSerializer, self).to_representation(obj)
+        primitive_repr['comment'] = primitive_repr.pop('exercisecomment_set')
+        return primitive_repr
 
 
 class ExerciseCategorySerializer(serializers.ModelSerializer):
