@@ -185,7 +185,8 @@ class WorkoutManagerTestCase(BaseTestCase, TestCase):
         current_field_class = field.__class__.__name__
 
         # Standard types, simply compare
-        if current_field_class in ('unicode', 'str', 'int', 'float', 'time', 'date'):
+        if current_field_class in (
+                'unicode', 'str', 'int', 'float', 'time', 'date'):
             self.assertEqual(field, value)
 
         # boolean, convert
@@ -195,16 +196,19 @@ class WorkoutManagerTestCase(BaseTestCase, TestCase):
         # decimal, convert
         elif current_field_class == 'Decimal':
             # TODO: use FOURPLACES when routine branch is merged
-            self.assertEqual(field.quantize(TWOPLACES), decimal.Decimal(value).quantize(TWOPLACES))
+            self.assertEqual(field.quantize(TWOPLACES),
+                             decimal.Decimal(value).quantize(TWOPLACES))
 
         # Related manager and SortedManyToMany, iterate
-        elif current_field_class in ('ManyRelatedManager', 'SortedRelatedManager'):
+        elif current_field_class in (
+                'ManyRelatedManager', 'SortedRelatedManager'):
             for j in field.all():
                 self.assertIn(j.id, value)
 
         # Uploaded image or file, compare the filename
         elif current_field_class in ('ImageFieldFile', 'FieldFile'):
-            self.assertEqual(os.path.basename(field.name), os.path.basename(value.name))
+            self.assertEqual(os.path.basename(field.name),
+                             os.path.basename(value.name))
 
         # Other objects (from foreign keys), check the ID
         else:
@@ -220,9 +224,9 @@ class WorkoutManagerTestCase(BaseTestCase, TestCase):
 
 class WorkoutManagerDeleteTestCase(WorkoutManagerTestCase):
     '''
-    Tests deleting an object an authorized user, a different one and a logged out
-    one. This assumes the delete action is only triggered with a POST request and
-    GET will only show a confirmation dialog.
+    Tests deleting an object an authorized user, a different one and a logged
+    out one. This assumes the delete action is only triggered with a POST
+    request and GET will only show a confirmation dialog.
     '''
 
     pk = None
@@ -240,7 +244,8 @@ class WorkoutManagerDeleteTestCase(WorkoutManagerTestCase):
 
         # Fetch the delete page
         count_before = self.object_class.objects.count()
-        response = self.client.get(get_reverse(self.url, kwargs={'pk': self.pk}))
+        response = self.client.get(get_reverse(
+            self.url, kwargs={'pk': self.pk}))
         count_after = self.object_class.objects.count()
         self.assertEqual(count_before, count_after)
 
@@ -250,7 +255,8 @@ class WorkoutManagerDeleteTestCase(WorkoutManagerTestCase):
             self.assertEqual(response.status_code, 200)
 
         # Try deleting the object
-        response = self.client.post(get_reverse(self.url, kwargs={'pk': self.pk}))
+        response = self.client.post(get_reverse(
+            self.url, kwargs={'pk': self.pk}))
 
         count_after = self.object_class.objects.count()
 
@@ -264,8 +270,9 @@ class WorkoutManagerDeleteTestCase(WorkoutManagerTestCase):
                               self.object_class.objects.get,
                               pk=self.pk)
 
-            # TODO: the redirection page might not have a language prefix (e.g. /user/login
-            #       instead of /en/user/login) so there is an additional redirect
+            # TODO: the redirection page might not have a language prefix
+            #       (e.g. /user/login instead of /en/user/login) so there is
+            #       an additional redirect
             # # The page we are redirected to doesn't trigger an error
             # response = self.client.get(response['Location'])
             # self.assertEqual(response.status_code, 200)
@@ -297,8 +304,8 @@ class WorkoutManagerDeleteTestCase(WorkoutManagerTestCase):
 
 class WorkoutManagerEditTestCase(WorkoutManagerTestCase):
     '''
-    Tests editing an object as an authorized user, a different one and a logged out
-    one.
+    Tests editing an object as an authorized user, a different one and a logged
+    out one.
     '''
 
     object_class = ''
@@ -308,10 +315,10 @@ class WorkoutManagerEditTestCase(WorkoutManagerTestCase):
     data_ignore = ()
     fileupload = None
     '''
-    If the form requires a file upload, specify the field name and the file path
-    here in a list or tuple:
+    If the form requires a file upload, specify the field name and the file
+    path here in a list or tuple:
 
-    ['fielname', 'path']
+    ['filename', 'path']
     '''
 
     def get_data(self, username=None):
@@ -336,7 +343,8 @@ class WorkoutManagerEditTestCase(WorkoutManagerTestCase):
         data = self.get_data(self.current_user)
 
         # Fetch the edit page
-        response = self.client.get(get_reverse(self.url, kwargs={'pk': self.pk}))
+        response = self.client.get(get_reverse(
+            self.url, kwargs={'pk': self.pk}))
         entry_before = self.object_class.objects.get(pk=self.pk)
 
         if fail:
@@ -356,8 +364,8 @@ class WorkoutManagerEditTestCase(WorkoutManagerTestCase):
                 url = get_reverse(self.url, kwargs={'pk': self.pk})
                 response = self.client.post(url, data)
         else:
-            response = self.client.post(get_reverse(self.url, kwargs={'pk': self.pk}), data)
-
+            response = self.client.post(get_reverse(
+                self.url, kwargs={'pk': self.pk}), self.data)
         entry_after = self.object_class.objects.get(pk=self.pk)
 
         # Check the results
@@ -374,8 +382,9 @@ class WorkoutManagerEditTestCase(WorkoutManagerTestCase):
                 current_field = getattr(entry_after, i)
                 self.compare_fields(current_field, data[i])
 
-            # TODO: the redirection page might not have a language prefix (e.g. /user/login
-            #       instead of /en/user/login) so there is an additional redirect
+            # TODO: the redirection page might not have a language prefix
+            #       (e.g. /user/login instead of /en/user/login) so there is
+            #       an additional redirect
             # # The page we are redirected to doesn't trigger an error
             # response = self.client.get(response['Location'])
             # self.assertEqual(response.status_code, 200)
@@ -407,8 +416,8 @@ class WorkoutManagerEditTestCase(WorkoutManagerTestCase):
 
 class WorkoutManagerAddTestCase(WorkoutManagerTestCase):
     '''
-    Tests adding an object as an authorized user, a different one and a logged out
-    one.
+    Tests adding an object as an authorized user, a different one and a logged
+    out one.
     '''
 
     object_class = ''
@@ -420,10 +429,10 @@ class WorkoutManagerAddTestCase(WorkoutManagerTestCase):
     data_ignore = ()
     fileupload = None
     '''
-    If the form requires a file upload, specify the field name and the file path
-    here in a list or tuple:
+    If the form requires a file upload, specify the field name and the file
+    path here in a list or tuple:
 
-    ['fielname', 'path']
+    ['filename', 'path']
     '''
 
     def get_data(self, username=None):
@@ -458,7 +467,8 @@ class WorkoutManagerAddTestCase(WorkoutManagerTestCase):
 
         # Enter the data
         count_before = self.object_class.objects.count()
-        self.pk_before = self.object_class.objects.all().order_by('id').last().pk
+        self.pk_before = self.object_class.objects.all().order_by(
+            'id').last().pk
 
         # Special care if there are any file uploads
         if self.fileupload:
@@ -470,7 +480,8 @@ class WorkoutManagerAddTestCase(WorkoutManagerTestCase):
         else:
             response = self.client.post(get_reverse(self.url), data)
         count_after = self.object_class.objects.count()
-        self.pk_after = self.object_class.objects.all().order_by('id').last().pk
+        self.pk_after = self.object_class.objects.all().order_by(
+            'id').last().pk
 
         if fail:
             self.assertIn(response.status_code, STATUS_CODES_FAIL)
@@ -489,8 +500,9 @@ class WorkoutManagerAddTestCase(WorkoutManagerTestCase):
 
             self.assertEqual(count_before + 1, count_after)
 
-            # TODO: the redirection page might not have a language prefix (e.g. /user/login
-            #       instead of /en/user/login) so there is an additional redirect
+            # TODO: the redirection page might not have a language prefix
+            #       (e.g. /user/login instead of /en/user/login) so there is
+            #       an additional redirect
             # # The page we are redirected to doesn't trigger an error
             # response = self.client.get(response['Location'])
             # self.assertEqual(response.status_code, 200)
@@ -526,8 +538,8 @@ class WorkoutManagerAddTestCase(WorkoutManagerTestCase):
 
 class WorkoutManagerAccessTestCase(WorkoutManagerTestCase):
     '''
-    Tests accessing a URL per GET as an authorized user, an unauthorized one and
-    a logged out one.
+    Tests accessing a URL per GET as an authorized user, an unauthorized one
+    and a logged out one.
     '''
 
     url = ''
@@ -543,8 +555,9 @@ class WorkoutManagerAccessTestCase(WorkoutManagerTestCase):
         if fail:
             self.assertIn(response.status_code, STATUS_CODES_FAIL)
 
-            # TODO: the redirection page might not have a language prefix (e.g. /user/login
-            #       instead of /en/user/login) so there is an additional redirect
+            # TODO: the redirection page might not have a language prefix
+            #       (e.g. /user/login instead of /en/user/login) so there is
+            #       an additional redirect
             # if response.status_code == 302:
             #     # The page we are redirected to doesn't trigger an error
             #     response = self.client.get(response['Location'])

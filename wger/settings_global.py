@@ -80,6 +80,9 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
 
+    # SVG template tag
+    'svg',
+
     # Breadcrumbs
     'django_bootstrap_breadcrumbs',
 
@@ -337,9 +340,12 @@ THUMBNAIL_ALIASES = {
 #
 # Django compressor
 #
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR + STATIC_URL
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+SVG_DIRS = [
+    os.path.join(BASE_DIR, 'core/static/images/muscles/main')
+]
 
 # The default is not DEBUG, override if needed
 # COMPRESS_ENABLED = True

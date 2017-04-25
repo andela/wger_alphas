@@ -32,10 +32,31 @@ function wgerHighlightMuscle(element) {
   isFront = ($(element).data('isFront') === 'True') ? 'front' : 'back';
   muscleId = divId.match(/\d+/);
 
+  // Reset all other highlighted muscles
+  $muscle = $('.muscle');
+  $muscle.removeClass('muscle-hover');
+  $muscle.addClass('muscle-not-inactive');
+
+  // Highlight the current one
+  $(element).removeClass('muscle-not-hover');
+  $(element).addClass('muscle-hover');
+
+
   // Set the corresponding background
   $('#muscle-system').css('background-image',
     'url(/static/images/muscles/main/muscle-' + muscleId + '.svg),' +
     'url(/static/images/muscles/muscular_system_' + isFront + '.svg)');
+
+    if (isFront === 'front') {
+        $('#muscle-direction #set-front').hide();
+        $('#muscle-direction #set-back').show();
+        displaySVGMuscles('front');
+    }
+    else if (isFront === 'back'){
+        $('#muscle-direction #set-back').hide();
+        $('#muscle-direction #set-front').show();
+        displaySVGMuscles('back')
+    }
 }
 
 /*
@@ -75,7 +96,72 @@ function wgerDrawWeightLogChart(data, divId) {
       height: 200,
       legend: legend,
       target: '#svg-' + divId,
-      colors: ['#204a87', '#4e9a06', '#ce5c00', '#5c3566', '#2e3436', '8f5902', '#a40000']
+      colors: ['#204a87', '#4e9a06', '#ce5c00', '#5c3566', '#2e3436', '#8f5902', '#a40000']
     });
   }
 }
+
+function wgerShowMuscleDetails(element){
+    var divId = $(element).attr('class');
+    var muscleId = divId.match(/\d+/)[0];
+    var element2 = $('.muscle[data-target="muscle-' + muscleId + '"]')
+    wgerHighlightMuscle(element2)
+
+    // Add on click trigger
+    $(element).click(function() {
+        $(element2).click();
+    });
+
+}
+
+function setMuscleDirection(orientation){
+    if (orientation === 'front') {
+        var muscles_orientation = $("#muscle-system").attr('style').match(/\(\w+muscular_system_back.svg/);
+        // Set the corresponding background
+        $('#muscle-system').css('background-image',
+            'url(/static/images/muscles/muscular_system_front.svg)');
+        displaySVGMuscles('front');
+        console.log("dir front: ", muscles_orientation);
+    }
+    else if (orientation === 'back') {
+        var muscles_orientation = $("#muscle-system").attr('style').match(/\(\w+muscular_system_back.svg/);
+        $('#muscle-system').css('background-image',
+            'url(/static/images/muscles/muscular_system_back.svg)');
+        displaySVGMuscles('back');
+        console.log("dir back: ", muscles_orientation)
+    }
+}
+
+function displaySVGMuscles(orientation) {
+    if (orientation === 'front') {
+        $('.muscle-svg.back-muscle').hide();
+        $('.muscle-svg.front-muscle').show();
+    } else if (orientation === 'back') {
+        $('.muscle-svg.front-muscle').hide();
+        $('.muscle-svg.back-muscle').show();
+    }
+}
+
+
+$(document).ready(function (){
+    var path =  $('svg path');
+    path.hover(function() {
+        wgerShowMuscleDetails(this);
+    });
+
+    path.click(function() {
+        wgerShowMuscleDetails(this);
+    });
+
+    $('#muscle-direction #set-front').click(function(){
+        setMuscleDirection('front');
+        $('#muscle-direction #set-front').hide();
+        $('#muscle-direction #set-back').show();
+    });
+    $('#muscle-direction #set-back').click(function() {
+        setMuscleDirection('back');
+        $('#muscle-direction #set-back').hide();
+        $('#muscle-direction #set-front').show();
+
+    });
+});

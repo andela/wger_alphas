@@ -75,3 +75,13 @@ class AbstractSubmissionModel(models.Model):
                               default=STATUS_PENDING,
                               editable=False)
     '''Status of the submission, e.g. accepted or declined'''
+
+    def status_description(self):
+        if self.status == '1':
+            return "Pending"
+
+        elif self.status == '2':
+            return "Accepted"
+
+        else:
+            "Rejected"

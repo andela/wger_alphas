@@ -35,9 +35,9 @@ from wger.weight.models import WeightEntry
 
 @python_2_unicode_compatible
 class Language(models.Model):
-    '''
+    """
     Language of an item (exercise, workout, etc.)
-    '''
+    """
 
     # e.g. 'de'
     short_name = models.CharField(max_length=2,
@@ -57,24 +57,24 @@ class Language(models.Model):
     # Django methods
     #
     def __str__(self):
-        '''
+        """
         Return a more human-readable representation
-        '''
+        """
         return u"{0} ({1})".format(self.full_name, self.short_name)
 
     def get_absolute_url(self):
-        '''
+        """
         Returns the canonical URL to view a language
-        '''
+        """
         return reverse('core:language:view', kwargs={'pk': self.id})
 
     #
     # Own methods
     #
     def get_owner_object(self):
-        '''
+        """
         Muscle has no owner information
-        '''
+        """
         return False
 
 
@@ -315,10 +315,10 @@ by the US Department of Agriculture. It is extremely complete, with around
 
     @property
     def weight(self):
-        '''
+        """
         Returns the last weight entry, done here to make the behaviour
         more consistent with the other settings (age, height, etc.)
-        '''
+        """
         try:
             weight = WeightEntry.objects.filter(user=self.user).latest().weight
         except WeightEntry.DoesNotExist:
@@ -327,9 +327,9 @@ by the US Department of Agriculture. It is extremely complete, with around
 
     @property
     def address(self):
-        '''
+        """
         Return the address as saved in the current contract (user's gym)
-        '''
+        """
         out = {'zip_code': '',
                'city': '',
                'street': '',
@@ -344,9 +344,9 @@ by the US Department of Agriculture. It is extremely complete, with around
         return out
 
     def clean(self):
-        '''
+        """
         Make sure the total amount of hours is 24
-        '''
+        """
         if ((self.sleep_hours and self.freetime_hours and self.work_hours)
            and (self.sleep_hours + self.freetime_hours + self.work_hours) > 24):
                 raise ValidationError(_('The sum of all hours has to be 24'))

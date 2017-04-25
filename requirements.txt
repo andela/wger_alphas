@@ -14,6 +14,7 @@ easy-thumbnails
 django_compressor
 icalendar
 django-bootstrap-breadcrumbs
+django-inline-svg==0.1.1
 sphinx
 django-sortedm2m
 django-activity-stream

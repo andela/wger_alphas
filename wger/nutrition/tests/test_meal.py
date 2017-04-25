@@ -36,7 +36,8 @@ class MealRepresentationTestCase(WorkoutManagerTestCase):
         '''
         Test that the representation of an object is correct
         '''
-        self.assertEqual("{0}".format(Meal.objects.get(pk=1)), '1 Meal')
+        self.assertEqual("{0}".format(
+            Meal.objects.get(pk=1)), 'Nutrition plan Meal')
 
 
 class EditMealTestCase(WorkoutManagerEditTestCase):
@@ -96,7 +97,8 @@ class PlanDetailTestCase(WorkoutManagerTestCase):
         Helper function to test the plan detail view
         '''
 
-        response = self.client.get(reverse('nutrition:plan:view', kwargs={'id': 1}))
+        response = self.client.get(reverse(
+            'nutrition:plan:view', kwargs={'id': 1}))
 
         # Page exists
         if fail:
