@@ -24,7 +24,8 @@ from wger.core.models import (
     DaysOfWeek,
     License,
     RepetitionUnit,
-    WeightUnit)
+    WeightUnit,
+    ApiUser)
 
 
 class UserprofileSerializer(serializers.ModelSerializer):
@@ -41,7 +42,9 @@ class UserSerializer(serializers.ModelSerializer):
     groups = serializers.SlugRelatedField(many=True, read_only='true', slug_field='name')
     user_permissions = serializers.SlugRelatedField(many=True, read_only='true', slug_field='name')
     class Meta:
-        model = User
+        model = ApiUser
+        read_only_fields = ('user', 'created_by',)
+        exclude = ('groups', 'user_permissions',)
 
 class UsernameSerializer(serializers.Serializer):
     '''
