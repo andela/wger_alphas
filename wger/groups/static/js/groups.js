@@ -10,9 +10,7 @@ $(function() {
         $( ".workout-log" ).each(function() {
           var elem = this;
           log_url = $( this ).attr('data-url');
-          console.log("URL: " + log_url);
           $.ajax(log_url).done(function(data) {
-    //            console.log("Ajax: " + html = $.parseHTML(data));
                 var data_obj = $(data).find("#content");
                 // Delete Add log buttons from the html
                 $(data_obj).find(".btn-success").remove();
@@ -22,7 +20,6 @@ $(function() {
         });
         $(".exercise-filter").click(function() {
             var hash = $(this).find('a').attr('href').split("#")[1];
-            console.log("Hash:  " + hash);
             filterExercises(hash)
         });
 
@@ -30,7 +27,6 @@ $(function() {
 
     function filterExercises(property) {
 
-        console.log("Filtering ");
         var exercise = false;
         var member = false;
 
@@ -59,12 +55,10 @@ $(function() {
 
             if($('#member-workouts .list-group').children(':visible').length
              == 0) {
-                console.log("Not visible");
                $("#no-exercises-match").css({
                     "display": "block",
                 });
             } else {
-                console.log("visible");
                  $("#no-exercises-match").css({
                     "display": "none"
                 });
@@ -91,7 +85,6 @@ $(function() {
             $("#member-workouts .workout-item").not($(parent)).hide();
 
             if (parent.html() === undefined) {
-                console.log("Not Parent!")
                 $("#no-exercises-match").css({
                     "display": "none"
                 });
@@ -100,7 +93,6 @@ $(function() {
                 });
 
             } else {
-                console.log("Is Parent!:" + parent.html())
                 $("#no-exercises-match").css({
                     "display": "none"
                 });
