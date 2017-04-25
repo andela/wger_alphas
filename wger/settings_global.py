@@ -16,6 +16,7 @@
 
 import re
 import sys
+import os
 
 '''
 This file contains the global settings that don't usually need to be changed.
@@ -78,6 +79,9 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
 
+    # SVG template tag
+    'svg',
+
     # Breadcrumbs
     'django_bootstrap_breadcrumbs',
 
@@ -86,6 +90,9 @@ INSTALLED_APPS = (
 
     # django-bower for installing bower packages
     'djangobower',
+
+    # Handles social login functonality
+    'social.apps.django_app.default',
 )
 
 # added list of external libraries to be installed by bower
@@ -113,7 +120,8 @@ MIDDLEWARE_CLASSES = (
     # Javascript Header. Sends helper headers for AJAX
     'wger.utils.middleware.JavascriptAJAXRedirectionMiddleware',
 
-    # Custom authentication middleware. Creates users on-the-fly for certain paths
+    # Custom authentication middleware. Creates users on-the-fly for certain
+    # paths
     'wger.utils.middleware.WgerAuthenticationMiddleware',
 
     # Send an appropriate Header so search engines don't index pages
@@ -130,8 +138,25 @@ MIDDLEWARE_CLASSES = (
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'wger.utils.helpers.EmailAuthBackend'
+    'wger.utils.helpers.EmailAuthBackend',
+
+    # social authentication backend
+    'social.backends.facebook.FacebookOAuth2',
+    'social.backends.google.GoogleOAuth2',
+    'social.backends.twitter.TwitterOAuth'
 )
+
+# Google plus authentication tokens
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ['GOOGLE_OAUTH2_KEY']
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ['GOOGLE_OAUTH2_SECRET']
+
+# Twitter authentication tokens
+SOCIAL_AUTH_TWITTER_KEY = os.environ['TWITTER_KEY']
+SOCIAL_AUTH_TWITTER_SECRET = os.environ['TWITTER_SECRET']
+
+# Facebook Authentication tokens
+SOCIAL_AUTH_FACEBOOK_KEY = os.environ['FACEBOOK_KEY']
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ['FACEBOOK_SECRET']
 
 TEMPLATES = [
     {
@@ -279,7 +304,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'wger-cache',
-        'TIMEOUT': 30 * 24 * 60 * 60,  # Cache for a month
+        'TIMEOUT': 3,  # Cache for a month
     }
 }
 
@@ -310,8 +335,11 @@ THUMBNAIL_ALIASES = {
 #
 # Django compressor
 #
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+SVG_DIRS = [
+    os.path.join(BASE_DIR, 'core/static/images/muscles/main')
+]
 
 # The default is not DEBUG, override if needed
 # COMPRESS_ENABLED = True
@@ -333,7 +361,8 @@ else:
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('wger.utils.permissions.WgerPermission',),
     'PAGINATE_BY': 20,
-    'PAGINATE_BY_PARAM': 'limit',  # Allow client to override, using `?limit=xxx`.
+    # Allow client to override, using `?limit=xxx`.
+    'PAGINATE_BY_PARAM': 'limit',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',

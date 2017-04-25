@@ -22,7 +22,8 @@ $(document).ready(function() {
             {% if editable %}
             <span class="editoptions" style="float: right;">
                 <a href="{% url 'manager:day:delete' day.obj.id %}"
-                   title="{% trans 'Delete' %}">
+                   title="{% trans 'Delete' %}"
+                   class="wger-modal-dialog">
                     <span class="{% fa_class 'trash' %}"></span></a>
                 <a href="{% url 'manager:day:edit' day.obj.id %}"
                    title="{% trans 'Edit' %}"
@@ -54,7 +55,8 @@ $(document).ready(function() {
                            <span class="{% fa_class 'pencil-square-o' %}"></span></a>
                         <br>
                     <a href="{% url 'manager:set:delete' set.obj.id %}"
-                       title="{% trans 'Delete' %}">
+                       title="{% trans 'Delete' %}"
+                       class="wger-modal-dialog">
                             <span class="{% fa_class 'trash' %}"></span></a>
                     </span>
                 {% endif %}

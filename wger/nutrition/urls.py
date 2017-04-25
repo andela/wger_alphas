@@ -17,7 +17,6 @@
 
 from django.contrib.auth.decorators import login_required
 from django.conf.urls import (
-    patterns,
     url,
     include
 )
@@ -53,7 +52,8 @@ patterns_plan = [
     url(r'^(?P<pk>\d+)/edit/$',
         login_required(plan.PlanEditView.as_view()),
         name='edit'),
-    url(r'^(?P<id>\d+)/pdf/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})$',
+    url(r'^(?P<id>\d+)/pdf/(?P<uidb64>[0-9A-Za-z_\-]+)/'
+        r'(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})$',
         plan.export_pdf,
         name='export-pdf'),
     url(r'^(?P<id>\d+)/pdf/$',
@@ -70,8 +70,8 @@ patterns_meal = [
     url(r'^(?P<pk>\d+)/edit/$',
         login_required(meal.MealEditView.as_view()),
         name='edit'),
-    url(r'^(?P<id>\d+)/delete/$',
-        meal.delete_meal,
+    url(r'^(?P<pk>\d+)/delete/$',
+        login_required(meal.MealDeleteView.as_view()),
         name='delete'),
 ]
 
@@ -84,8 +84,8 @@ patterns_meal_item = [
     url(r'^(?P<pk>\d+)/edit/$',
         login_required(meal_item.MealItemEditView.as_view()),
         name='edit'),
-    url(r'^(?P<item_id>\d+)/delete/$',
-        meal_item.delete_meal_item,
+    url(r'^(?P<pk>\d+)/delete/$',
+        login_required(meal_item.MealItemDeleteView.as_view()),
         name='delete'),
 ]
 
@@ -187,7 +187,9 @@ urlpatterns = [
    url(r'^meal/item/', include(patterns_meal_item, namespace="meal_item")),
    url(r'^ingredient/', include(patterns_ingredient, namespace="ingredient")),
    url(r'^unit/', include(patterns_weight_unit, namespace="weight_unit")),
-   url(r'^unit-to-ingredient/', include(patterns_unit_ingredient, namespace="unit_ingredient")),
+   url(r'^unit-to-ingredient/',
+       include(patterns_unit_ingredient, namespace="unit_ingredient")),
    url(r'^calculator/bmi/', include(patterns_bmi, namespace="bmi")),
-   url(r'^calculator/calories/', include(patterns_calories, namespace="calories")),
+   url(r'^calculator/calories/',
+       include(patterns_calories, namespace="calories")),
 ]

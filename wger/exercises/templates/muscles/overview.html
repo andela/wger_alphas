@@ -1,5 +1,5 @@
 {% extends "base_wide.html" %}
-{% load i18n staticfiles cache wger_extras %}
+{% load i18n staticfiles cache wger_extras svg %}
 
 <!--
         Title
@@ -8,6 +8,7 @@
 
 
 {% block header %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/exercise.css' %}">
 <script src="{% static 'js/exercises.js' %}"></script>
 
 <script>
@@ -29,6 +30,25 @@ $(document).ready(function() {
     });
 
     // Highlight on click
+    $('.muscle').click(function() {
+
+        // Show the corresponding exercises
+
+        divId = $(this).data('target');
+        $('.exercise-list').hide();
+        $('#' + divId).show();
+
+        // Reset all other highlighted muscles
+
+        $muscle = $('.muscle');
+        $muscle.removeClass('muscle-active');
+        $muscle.addClass('muscle-inactive');
+
+        // Highlight the current one
+
+        $(this).removeClass('muscle-inactive');
+        $(this).addClass('muscle-active');
+    });
 
 });
 </script>
@@ -40,14 +60,25 @@ $(document).ready(function() {
 -->
 {% block content %}
 {% cache cache_timeout muscle-overview language.id %}
-{% trans "Hover with the mouse over the muscles to show corresponding exercises." %}
-
+{% trans "Hover with the mouse over the muscles or muscle names to show corresponding muscle image. Click on the muscle or muscle name to show the corresponding exercises." %}
 <div class="row">
     <div class="col-sm-4 col-xs-6">
         <h4 style="padding-bottom:0.5em;">{% trans "Muscles" %}</h4>
+        <div class="muscle-svg front-muscle">
+            {% svg 'muscle-front' %}
+        </div>
+        <div class="muscle-svg back-muscle">
+            {% svg 'muscle-back' %}
+        </div>
+
+
         <div id="muscle-system"
              class="muscle-background"
-             style="background-image: url('/static/images/muscles/muscular_system_front.svg');">
+             style="background-image: url('/static/images/muscles/muscular_system_front.svg'); color: blue;">
+        </div>
+        <div id="muscle-direction">
+            <div id="set-back">View Back</div>
+            <div id="set-front">View Front</div>
         </div>
     </div>
     <div class="col-sm-4 col-xs-6">
@@ -81,7 +112,7 @@ $(document).ready(function() {
                     {% for exercise in muscle.exercise_set.select_related %}
                     {% if exercise.language in active_languages %}
                     <li class="exercise">
-                        <a href="{{exercise.get_absolute_url}}">{{exercise}}</a>
+                        <div data-toggle="modal"  data-target="#myModal" id="{{exercise.id}}" class="theModal">{{exercise}}</div>
                     </li>
                     {% endif %}
                     {% empty %}
@@ -94,8 +125,27 @@ $(document).ready(function() {
         {% endfor %}
     </div>
 </div>
+
+<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modal-title"></h4>
+      </div>
+      <div class="modal-body" id="myModalBody">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endcache %}
 {% endblock %}
+
+
 
 
 <!--
