@@ -218,9 +218,6 @@ class CompareView(DetailView):
                                                         'user_pk': membership.user_id})])
 
             context['memberships_list'].append(out)
-        pp = pprint.PrettyPrinter(indent=4)
-        print("\n\n***** Context: ")
-        pp.pprint(context['exercises_list'])
 
         return context
 
