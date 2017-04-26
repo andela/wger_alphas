@@ -24,6 +24,9 @@ $(function() {
         });
 
         $("#show-all-exercises").click(function() {
+            $("#filters #no-filter").show();
+            $("#filters #ex-filter").text("");
+            $("#filters #mem-filter").text("");
             $(".list-group .workout-item").show();
         });
 
@@ -36,6 +39,9 @@ $(function() {
 
         if (property.indexOf("ex-") == 0) {
             exercise = property.split("ex-")[1];
+            $("#filters #no-filter").hide();
+            $("#filters #mem-filter").text("");
+            $("#filters #ex-filter").text(exercise);
             var div = $(".log-div").find("a").filter(function( index ) {
                 var href = $( this ).attr( "href" );
                 var hr =  href.split("/").pop()
@@ -68,8 +74,23 @@ $(function() {
                 });
             }
 
+            if($('#own-workouts .list-group').children(":visible").length
+             == 0) {
+                console.log("NOt Visible!");
+               $("#no-exercises").css({
+                    "display": "block",
+                });
+            } else {
+                console.log("Visible!");
+                 $("#no-exercises").css({
+                    "display": "none"
+                });
+            }
+
         } else if (property.indexOf("member-") == 0) {
             member = property.split("member-")[1];
+            $("#filters #no-filter").hide();
+            $("#filters #mem-filter").text(member);
             var div = $("#member-workouts .workout-item").find(
             "span.member-name").filter
             (function( index ) {

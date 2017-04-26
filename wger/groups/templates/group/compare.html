@@ -63,6 +63,18 @@
                 </ul>
             </div>
     </div>
+    <div class="col-sm-12">
+        <br>
+        <div id="filters">
+            <span><strong>Filters:</strong></span>
+            <span id="no-filter">
+                None
+            </span>
+            <span id="ex-filter" class="label label-primary"></span>
+             &nbsp;
+            <span id="mem-filter" class="label label-warning"></span>
+        </div>
+    </div>
 
 
     <div class="col-sm-6" id="own-workouts">
@@ -75,17 +87,18 @@
                         {{ workout }}
                     </a>
                     <span class="label label-success">
-                        {% trans "Owner" %}
+                        {% trans "owner" %}
                     </span>
                     <br>
                     <div class="workout-log" data-url="{{ workout.get_log_url }}">
                     </div>
                 <!-- End Workout Log -->
-
                 </div>
+                <div class="list-group-item" id="no-exercises"
+                         style="display: none;">{% trans "You have no Matching Exercises" %}</div>
             {% endif %}
             {% empty %}
-                <div class="list-group-item">{% trans "Nothing found" %}</div>
+                <div class="list-group-item" id="nothing">{% trans "Nothing found" %}</div>
             {% endfor %}
         </div>
     </div>
