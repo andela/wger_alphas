@@ -27,11 +27,14 @@ class Command(BaseCommand):
             return ""
         else:
             if creator:
+                # create user with default password
                 app_user = User.objects.create_user(username=options["username"],
                                                     email=options["email"],
                                                     password="password123"
                                                     )
                 app_user.save()
+                api_user = ApiUser(user=app_user, created_by=creator[0])
+                api_user.save()
                 self.stdout.write("API user created.")
 
             else:
