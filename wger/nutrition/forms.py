@@ -18,12 +18,14 @@ import logging
 
 from django import forms
 from django.utils.translation import ugettext as _
+from django.forms.models import inlineformset_factory
 from wger.core.models import UserProfile
 
 from wger.nutrition.models import (
     IngredientWeightUnit,
     Ingredient,
-    MealItem
+    MealItem,
+    Meal
 )
 from wger.utils.widgets import Html5NumberInput
 
@@ -101,28 +103,33 @@ class DailyCaloriesForm(forms.ModelForm):
     Form for the total daily calories needed
     '''
 
-    base_calories = forms.IntegerField(label=_('Basic caloric intake'),
-                                       help_text=_('Your basic caloric intake as calculated for '
-                                                   'your data'),
-                                       required=False,
-                                       widget=Html5NumberInput())
-    additional_calories = forms.IntegerField(label=_('Additional calories'),
-                                             help_text=_('Additional calories to add to the base '
-                                                         'rate (to substract, enter a negative '
-                                                         'number)'),
-                                             initial=0,
-                                             required=False,
-                                             widget=Html5NumberInput())
+    base_calories = forms.IntegerField(
+        label=_('Basic caloric intake'),
+        help_text=_(
+            'Your basic caloric intake as calculated for '
+            'your data'),
+        required=False,
+        widget=Html5NumberInput())
+    additional_calories = forms.IntegerField(
+        label=_('Additional calories'),
+        help_text=_(
+            'Additional calories to add to the base '
+            'rate (to substract, enter a negative '
+            'number)'),
+        initial=0,
+        required=False,
+        widget=Html5NumberInput())
 
     class Meta:
         model = UserProfile
-        fields = ('calories',)
+        fields = ('calories',) 
 
 
 class MealItemForm(forms.ModelForm):
-    weight_unit = forms.ModelChoiceField(queryset=IngredientWeightUnit.objects.none(),
-                                         empty_label="g",
-                                         required=False)
+    weight_unit = forms.ModelChoiceField(
+        queryset=IngredientWeightUnit.objects.none(),
+        empty_label="g",
+        required=False)
     ingredient = forms.ModelChoiceField(queryset=Ingredient.objects.all(),
                                         widget=forms.HiddenInput)
 
@@ -145,4 +152,12 @@ class MealItemForm(forms.ModelForm):
         # Filter the available ingredients
         if ingredient_id:
             self.fields['weight_unit'].queryset = \
-                IngredientWeightUnit.objects.filter(ingredient_id=ingredient_id)
+                IngredientWeightUnit.objects.filter(
+                    ingredient_id=ingredient_id)
+
+
+MealItemFormSet = inlineformset_factory(Meal, MealItem,
+                                        fields='__all__',
+                                        form=MealItemForm,
+                                        extra=1,
+                                        can_delete=False)
