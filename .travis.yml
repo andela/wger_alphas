@@ -57,9 +57,7 @@ script:
   - npm install gulp-eslint
 
   # Regular application
-  - coverage run --source='.' ./manage.py test
-
+  - coverage run --source='.' ./manage.py test --settings=wger.settings
 
   # Code coverage
   - coverage report
-  
