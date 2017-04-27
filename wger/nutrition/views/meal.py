@@ -19,7 +19,8 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy, ugettext as _
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.shortcuts import render
 
 from django.views.generic import CreateView, UpdateView, DeleteView
 
@@ -48,32 +49,68 @@ class MealCreateView(WgerFormMixin, CreateView):
     template_name = 'meal/add.html'
     owner_object = {'pk': 'plan_pk', 'class': NutritionPlan}
 
+    def dispatch(self, request, *args, **kwargs):
+        '''
+        Check that the user owns the nutrition plan
+        '''
+        plan = get_object_or_404(NutritionPlan, pk=kwargs['plan_pk'])
+        if plan.user == request.user:
+            self.plan = plan
+            return super(MealCreateView, self).dispatch(
+                request, *args, **kwargs)
+        else:
+            return HttpResponseForbidden()
+
     def form_valid(self, form):
-        plan = get_object_or_404(
-            NutritionPlan, pk=self.kwargs['plan_pk'], user=self.request.user)
-        form.instance.plan = plan
+        from django.contrib import messages
+
+        form.instance.plan = self.plan
         form.instance.order = 1
         self.object = form.save()
 
         context = self.get_context_data()
         meal_item_formset = context['meal_item']
-        if meal_item_formset.is_valid():
-            for meal_item in meal_item_formset:
-                cleaned = meal_item.cleaned_data
-                amount = cleaned.get('amount')
-                weight_unit = cleaned.get('weight_unit')
-                ingredient = cleaned.get('ingredient')
-                if weight_unit:
-                    meal_item = MealItem(
-                        meal=self.object, order=1, amount=amount,
-                        weight_unit=weight_unit, ingredient=ingredient)
-                else:
-                    meal_item = MealItem(
-                        ingredient=ingredient, meal=self.object, order=1,
-                        amount=amount)
-                meal_item.save()
 
-        return HttpResponseRedirect(self.get_success_url())
+        if meal_item_formset.is_valid():
+            for meal_item_form in meal_item_formset.forms:
+                    cleaned = meal_item_form.cleaned_data
+                    amount = cleaned.get('amount')
+                    weight_unit = cleaned.get('weight_unit')
+                    ingredient = cleaned.get('ingredient')
+
+                    if amount and ingredient:
+                        if weight_unit:
+                            meal_item = MealItem(
+                                meal=self.object, order=1, amount=amount,
+                                weight_unit=weight_unit, ingredient=ingredient)
+                        else:
+                            meal_item = MealItem(
+                                ingredient=ingredient, meal=self.object,
+                                order=1, amount=amount)
+                        meal_item.save()
+                        messages.success(self.request, ugettext_lazy(
+                            'MEAL and MEAL ITEM successfully added'))
+                        return HttpResponseRedirect(self.get_success_url())
+
+                    else:
+                        messages.success(self.request, ugettext_lazy(
+                            'An empty MEAL was added since there was no valid'
+                            ' MEAL ITEM to add. Both MEAL ITEM fields were'
+                            ' empty or invalid'))
+                        return HttpResponseRedirect(self.get_success_url())
+
+        else:
+            self.object.delete()
+            return render(self.request, self.template_name, context,
+                          status=302)
+
+        # TODO:
+        #       -Rework meal with meal item creation to make better use of
+        #       django generic views. There has be a better way of using the
+        #       inline formset.
+        #       -Improve formset validation.
+        #       -Add ability to add multiple meal items with meal at once.
+        #       (django dynamic formsets)
 
     def get_success_url(self):
         return self.object.plan.get_absolute_url()
