@@ -8,10 +8,9 @@ class Command(BaseCommand):
     Management command to create users via API
     '''
     help = 'create users via API'
-    #     create APP - creator
-    # use APP to create user
 
     def add_arguments(self, parser):
+        # add commandline arguments
         parser.add_argument('username', type=str)
         parser.add_argument('email', type=str)
         parser.add_argument('creator_username', type=str)
@@ -20,11 +19,9 @@ class Command(BaseCommand):
         # check if user exists
         creator = User.objects.filter(username=options["creator_username"])
         if User.objects.filter(username=options["username"]):
-            self.stdout.write("Username already used".format(options["username"], options["username"]))
-            return ""
+            raise CommandError('Username {} already in use.'.format(options["username"]))
         elif User.objects.filter(email=options["email"]):
-            self.stdout.write("Email already used".format(options["username"], options["email"]))
-            return ""
+            raise CommandError("Email {} already in use.".format(options["email"]))
         else:
             if creator:
                 # create user with default password
@@ -36,8 +33,6 @@ class Command(BaseCommand):
                 api_user = ApiUser(user=app_user, created_by=creator[0])
                 api_user.save()
                 self.stdout.write("API user created.")
-
             else:
-                self.stdout.write("Creator username does not exist. Cannot create new API user.")
-                return ""
-
+                raise CommandError("There is no creator with username {}. Cannot create new API user.".format(
+                    options["creator_username"]))
