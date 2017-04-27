@@ -57,10 +57,32 @@ class AddMealTestCase(WorkoutManagerAddTestCase):
     '''
 
     object_class = Meal
-    url = reverse('nutrition:meal:add', kwargs={'plan_pk': 4})
-    data = {'time': datetime.time(9, 2)}
-    user_success = 'test'
-    user_fail = 'admin'
+    url = reverse('nutrition:meal:add', kwargs={'plan_pk': 5})
+    data = {'time': datetime.time(9, 2),
+            'mealitem_set-TOTAL_FORMS': ['1'],
+            'mealitem_set-INITIAL_FORMS': ['0'],
+            'mealitem_set-MIN_NUM_FORMS': ['0'],
+            'mealitem_set-MAX_NUM_FORMS': ['1000'],
+            'ingredient_searchfield': [''],
+            'mealitem_set-0-ingredient': [''],
+            'mealitem_set-0-id': [''],
+            'mealitem_set-0-meal': [''],
+            'mealitem_set-0-amount': [''],
+            'mealitem_set-0-weight_unit': ['']}
+
+    data_ignore = ('mealitem_set-TOTAL_FORMS',
+                   'mealitem_set-INITIAL_FORMS',
+                   'mealitem_set-MIN_NUM_FORMS',
+                   'mealitem_set-MAX_NUM_FORMS',
+                   'ingredient_searchfield',
+                   'mealitem_set-0-ingredient',
+                   'mealitem_set-0-id',
+                   'mealitem_set-0-meal',
+                   'mealitem_set-0-amount',
+                   'mealitem_set-0-weight_unit')
+
+    # TODO: Add tests to check that meal items are created
+    #       together with the meal when the form is valid
 
 
 class PlanOverviewTestCase(WorkoutManagerTestCase):
