@@ -29,14 +29,21 @@ class Command(BaseCommand):
         # validate APP credentials
         creator_username = options["creator_username"]
         creator_password = options["creator_password"]
-        creator = User.objects.filter(username="admin")
+        creator = User.objects.filter(username=creator_username)
         if creator:
             # if the creator credentials are valid authenticate
             response = requests.post(settings.SITE_URL+reverse("rest_auth:rest_login"),
                                      {"username": creator_username, "password": creator_password})
-            # get auth token from the response
-            auth_token = json.loads(response.content)["key"]
-            self.stdout.write("response {}".format(auth_token))
+            if response.status_code == 200:
+                # get auth token from the response
+                auth_token = json.loads(response.content)["key"]
+
+                self.stdout.write("response {}".format(auth_token))
+            else:
+                raise CommandError("Incorrect password.")
+        else:
+            raise CommandError("Username not known.")
+
         # # check if user exists
         # if User.objects.filter(username=options["username"]):
         #     raise CommandError('Username {} already in use.'.format(options["username"]))
