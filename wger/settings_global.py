@@ -147,7 +147,7 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth'
 )
 
-Google plus authentication tokens
+# Google plus authentication tokens
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ['GOOGLE_OAUTH2_KEY']
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ['GOOGLE_OAUTH2_SECRET']
 
