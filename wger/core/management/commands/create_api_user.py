@@ -40,26 +40,55 @@ class Command(BaseCommand):
                 auth_token = json.loads(response.content)["key"]
 
                 self.stdout.write("response {}".format(auth_token))
-                # register new user via api endpoint
-                payload = {
-                    "user": {
-                        "username": options["username"],
-                        "email": options["email"],
-                        "password": "password123"
-                    },
-                    "created_by": creator[0].id
-                }
-                # jsonify the data
-                data = json.dumps(payload)
-                new_api_user = requests.post(settings.SITE_URL+'/api/v2/user/',
-                                             headers={
-                                                 'Authorization': 'Token '+auth_token,
-                                                 'content-type': 'application/json'
-                                             },
-                                             data=data
-                                             )
-                self.stdout.write("User successfully created")
+                # check if user exists
+                if User.objects.filter(username=options["username"]):
+                    raise CommandError("User with username {} exists.".format(options["username"]))
+                else:
+                    if User.objects.filter(username=options["email"]):
+                        raise CommandError("User with email {} exists.".format(options["email"]))
+                    else:
+                        # register new user via api endpoint
+                        payload = {
+                            "user": {
+                                "username": options["username"],
+                                "email": options["email"],
+                                "password": "password123"
+                            },
+                            "created_by": creator[0].id
+                        }
+                        # jsonify the data
+                        data = json.dumps(payload)
+                        requests.post(settings.SITE_URL+'/api/v2/user/',
+                                                     headers={
+                                                         'Authorization': 'Token '+auth_token,
+                                                         'content-type': 'application/json'
+                                                     },
+                                                     data=data
+                                                     )
+                        self.stdout.write("User successfully created")
             else:
                 raise CommandError("Incorrect password.")
         else:
             raise CommandError("Username not known.")
+
+
+
+            # # check if user exists
+            # if User.objects.filter(username=options["username"]):
+            #     raise CommandError('Username {} already in use.'.format(options["username"]))
+            # elif User.objects.filter(email=options["email"]):
+            #     raise CommandError("Email {} already in use.".format(options["email"]))
+            # else:
+            #     if creator:
+            #         # create user with default password
+            #         app_user = User.objects.create_user(username=options["username"],
+            #                                             email=options["email"],
+            #                                             password="password123"
+            #                                             )
+            #         app_user.save()
+            #         api_user = ApiUser(user=app_user, created_by=creator[0])
+            #         api_user.save()
+            #         self.stdout.write("API user created.")
+            #     else:
+            #         raise CommandError("There is no creator with username {}. Cannot create new API user.".format(
+            #             options["creator_username"]))
