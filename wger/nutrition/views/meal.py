@@ -19,10 +19,12 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy, ugettext as _
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 
 from django.views.generic import CreateView, UpdateView, DeleteView
 
-from wger.nutrition.models import NutritionPlan, Meal
+from wger.nutrition.forms import MealItemFormSet
+from wger.nutrition.models import (NutritionPlan, Meal, MealItem)
 from wger.utils.generic_views import (
     WgerFormMixin,
     WgerDeleteMixin
@@ -43,6 +45,7 @@ class MealCreateView(WgerFormMixin, CreateView):
     model = Meal
     fields = '__all__'
     title = ugettext_lazy('Add new meal')
+    template_name = 'meal/add.html'
     owner_object = {'pk': 'plan_pk', 'class': NutritionPlan}
 
     def form_valid(self, form):
@@ -50,7 +53,27 @@ class MealCreateView(WgerFormMixin, CreateView):
             NutritionPlan, pk=self.kwargs['plan_pk'], user=self.request.user)
         form.instance.plan = plan
         form.instance.order = 1
-        return super(MealCreateView, self).form_valid(form)
+        self.object = form.save()
+
+        context = self.get_context_data()
+        meal_item_formset = context['meal_item']
+        if meal_item_formset.is_valid():
+            for meal_item in meal_item_formset:
+                cleaned = meal_item.cleaned_data
+                amount = cleaned.get('amount')
+                weight_unit = cleaned.get('weight_unit')
+                ingredient = cleaned.get('ingredient')
+                if weight_unit:
+                    meal_item = MealItem(
+                        meal=self.object, order=1, amount=amount,
+                        weight_unit=weight_unit, ingredient=ingredient)
+                else:
+                    meal_item = MealItem(
+                        ingredient=ingredient, meal=self.object, order=1,
+                        amount=amount)
+                meal_item.save()
+
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         return self.object.plan.get_absolute_url()
@@ -58,6 +81,11 @@ class MealCreateView(WgerFormMixin, CreateView):
     # Send some additional data to the template
     def get_context_data(self, **kwargs):
         context = super(MealCreateView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['meal_item'] = MealItemFormSet(self.request.POST)
+        else:
+            context['meal_item'] = MealItemFormSet()
+
         context['form_action'] = reverse(
             'nutrition:meal:add',
             kwargs={'plan_pk': self.kwargs['plan_pk']})
