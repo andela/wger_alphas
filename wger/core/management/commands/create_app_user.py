@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Command(BaseCommand):
     '''
-    Management command to create users via API
+    Management command to create app Users - Applications to create users via API
     '''
     help = 'create users via API'
 
@@ -13,12 +13,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # check if app exists
+        # admin = User.objects.filter(username="admin")
         if User.objects.filter(username=options["username"]):
-            self.stdout.write("Username already used".format(options["username"], options["username"]))
-            return ""
+            raise CommandError('Username {} already in use.'.format(options["username"]))
         elif User.objects.filter(email=options["email"]):
-            self.stdout.write("Email already used".format(options["username"], options["email"]))
-            return ""
+            raise CommandError('Email {} already in use.'.format(options["email"]))
         else:
             # create APP user
             app_user = User.objects.create_user(username=options["username"],
@@ -26,5 +25,6 @@ class Command(BaseCommand):
                                                 password="password123"
                                                 )
             app_user.save()
+            # create profile
             self.stdout.write("New app user {} created successfully".format(options["username"]))
 
