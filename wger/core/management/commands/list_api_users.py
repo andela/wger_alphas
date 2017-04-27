@@ -1,16 +1,18 @@
 from django.core.management.base import BaseCommand, CommandError
-from django.contrib.auth.models import User
-
+from tabulate import tabulate
 from wger.core.models import ApiUser
 
 class Command(BaseCommand):
     '''
-    Management command to create users via API
+    Management command to list users created via API
     '''
-    help = 'create users via API'
+    help = 'List users created via API'
 
-    def handle(self, *args, **options):
+    def handle(self, **options):
         all_users = ApiUser.objects.all()
+        headers = ["USERNAME", "EMAIL"]
+        table = []
         for user in all_users:
-            self.stdout.write("{} {}".format(user.user.username, user.user.email))
+            table.append([user.user.username, user.user.email])
 
+        self.stdout.write(tabulate(table, headers, tablefmt="fancy_grid"))
