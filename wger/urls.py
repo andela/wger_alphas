@@ -202,7 +202,9 @@ urlpatterns += [
         nutrition_api_views.search,
         name='ingredient-search'),
     url(r'^api/v2/', include(router.urls)),
+    url(r'^rest-auth/', include('rest_auth.urls')),
 ]
+
 
 #
 # URL for user uploaded files, served like this during development only

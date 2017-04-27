@@ -78,6 +78,7 @@ INSTALLED_APPS = (
     'tastypie',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_auth',
 
     # SVG template tag
     'svg',
