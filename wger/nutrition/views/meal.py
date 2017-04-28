@@ -122,10 +122,10 @@ class MealCreateView(WgerFormMixin, CreateView):
         # TODO: -Rework meal with meal item creation to make better use of
         #        django generic views. There has to be a better way of using
         #        the inline formset.
-        #       -Improve formset validation.
+        #       -Improve formset validation. Putting in 'eeeee' in the amount
+        #        field submits as empty
         #       -Add ability to add multiple meal items with meal at once.
         #        (django dynamic formsets)
-        #       -Putting in 'eeeee' in the amount field submits as empty
 
     def get_success_url(self):
         return self.object.plan.get_absolute_url()
