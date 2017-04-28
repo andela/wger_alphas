@@ -312,3 +312,7 @@ function wgerInitCaloriesCalculator() {
       });
   });
 }
+
+function goBack() {
+  window.history.back();
+}

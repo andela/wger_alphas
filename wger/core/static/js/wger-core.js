@@ -230,6 +230,8 @@ function modalDialogFormEdit() {
   $form = $('#ajax-info-content').find('form');
   $submit = $($form).find('#form-save');
 
+  $submit.removeClass('btn btn-default btn-block').addClass('btn btn-primary btn-block');
+
   $submit.click(function (e) {
     var formData;
     var formAction;
