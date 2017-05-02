@@ -30,7 +30,11 @@
         {% endfor %}
         </div>
     </div>
-
-    {% render_form_submit %}
+    <br>
+    <div class="form-group">
+        <div class="col-md-offset-1 col-md-10">
+            <input type="submit" value="{% trans "Save" %}" id="form-save" class="btn btn-primary btn-block">
+        </div>
+    </div>
 </form>
 {% endblock %}

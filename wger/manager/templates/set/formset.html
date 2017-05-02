@@ -2,7 +2,7 @@
 {% load i18n %}
 <div id="formset-exercise-{{exercise.id}}" style="margin-top: 1em;">
 <div class="row">
-    <div class="col-md-offset-2 col-md-10">
+    <div class="col-md-offset-3 col-md-10">
         <label class="control-label">
             {{exercise}}
         </label>
@@ -39,7 +39,7 @@
     <div class="row">
         {% for i in field %}
             {% if forloop.first %}
-            <div class="col-xs-2" style="text-align: right; padding-left: 0px;">
+            <div class="col-xs-2" style="text-align: right; width: 12.5%; padding-left: 2.5%;">
                 {% trans "Nr." %} {{ forloop.parentloop.counter }}
             </div>
             {% endif %}
