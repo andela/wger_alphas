@@ -114,8 +114,6 @@ class MealCreateView(WgerFormMixin, CreateView):
                         return HttpResponseRedirect(self.get_success_url())
 
         else:
-            print('\n\n\n\n\nFORM ERRORS:',
-                  meal_item_formset._errors, '\n\n\n\n')
             self.object.delete()
             return render(self.request, self.template_name, context)
 
