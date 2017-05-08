@@ -71,25 +71,26 @@ function wgerInitIngredientAutocompleter() {
       var ingredientId = suggestion.data.id;
 
       // After clicking on a result set the value of the hidden field
-      $('#id_ingredient').val(ingredientId);
+      $('input[id$="ingredient"]').val(ingredientId);
       $('#exercise_name').html(suggestion.value);
 
       // See if the ingredient has any units and set the values for the forms
       $.get('/api/v2/ingredientweightunit/?ingredient=' + ingredientId, function (unitData) {
         // Remove any old units, if any
-        var options = $('#id_weight_unit').find('option');
+        var options = $('form select[id$="weight_unit"]').find('option');
         $.each(options, function (index, optionObj) {
           if (optionObj.value !== '') {
             $(optionObj).remove();
           }
         });
+        
 
         // Add new units, if any
         $.each(unitData.results, function (index, value) {
           $.get('/api/v2/weightunit/' + value.unit + '/', function (unit) {
             var unitName = unit.name + ' (' + value.gram + 'g)';
             $('#id_unit').append(new Option(unitName, value.id));
-            $('#id_weight_unit').append(new Option(unitName, value.id));
+            $('form select[id$="weight_unit"]').append(new Option(unitName, value.id));
           });
         });
       });
@@ -310,4 +311,8 @@ function wgerInitCaloriesCalculator() {
           });
       });
   });
+}
+
+function goBack() {
+  window.history.back();
 }

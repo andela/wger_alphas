@@ -63,6 +63,7 @@ class MealItemCreateView(WgerFormMixin, CreateView):
     model = MealItem
     form_class = MealItemForm
     template_name = 'meal_item/edit.html'
+    messages = ugettext_lazy('Meal item successfully added')
 
     def dispatch(self, request, *args, **kwargs):
         '''
