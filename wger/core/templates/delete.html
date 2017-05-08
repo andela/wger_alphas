@@ -26,8 +26,11 @@
     </div>
     </div>
 
-    {% trans 'Yes, delete' as submit_text %}
-    {% render_form_submit submit_text 'danger' %}
+    <div class="form-group">    
+        <div class="col-md-offset-1 col-md-10">
+                 <input type="submit" value="{% trans " Yes, Delete " %}" id="form-save" class="btn btn-danger btn-block">
+        </div>
+    </div>
 
     </form>
 {% endblock %}
