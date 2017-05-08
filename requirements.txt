@@ -8,6 +8,7 @@ reportlab
 django_mobile
 django-formtools>=1.0,<1.1
 bleach
+fitbit==0.3.0
 python-mimeparse
 pillow
 easy-thumbnails

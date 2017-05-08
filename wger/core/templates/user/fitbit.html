@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n staticfiles wger_extras %}
+
+{% block title %}
+{% trans "Connect to your Fitbit Account" %}
+<a href="{{ fitbit_auth }}" class="btn btn-primary pull-right">
+    <span class="{% fa_class 'refresh' %}"></span>
+            {% trans "Fitbit" %}
+</a>
+{% endblock %}
+
+{% block content %}
+<div align="center">
+<p>
+    Workout Manager has a way for you to integrate data collected from your Fitbit device to the site.
+</p>
+<p>
+   Click on the connect button and you will be redirected to the Fitbit page for Login.
+     <img src="{{STATIC_URL}}images/fitbit-login.jpg" height="50%", width="50%">
+</p>
+    <p><br/>
+    Fitbit also requires you to give consent for the kind of data you will allow wger to access.<br/>
+        <img src="{{STATIC_URL}}images/fitbit-consent.jpg" height="50%", width="50%">
+</p>
+
+{% endblock %}
+
+</div>

@@ -65,3 +65,9 @@ class WeightEntry(models.Model):
         Returns the object that has owner information
         '''
         return self
+
+    def get_user_weight(self):
+        '''
+        Returns weight information from fitbit
+        '''
+        return self.weight
