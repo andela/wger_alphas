@@ -67,7 +67,7 @@ from wger.gym.models import (
     GymUserConfig,
     Contract
 )
-from wger.settings import SITE_URL
+from wger.settings_global import SITE_URL
 logger = logging.getLogger(__name__)
 
 
@@ -563,7 +563,7 @@ def fitbit_support(request):
             access_token = response.get('access_token', "")
             user_id = response.get('user_id')
             headers["Authorization"] = "Bearer " + access_token
-            new_response = requests.get("https://api.fitbit.com/1/user/"+user_id+"/profile.json", headers=headers)
+            new_response = requests.get("https://api.fitbit.com/1/user/" + user_id + "/profile.json", headers=headers)
             weight = new_response.json()["user"]["weight"]
             try:
                 weight_entry = WeightEntry()
