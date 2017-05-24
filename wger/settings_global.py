@@ -28,6 +28,7 @@ For a full list of options, visit:
 import os
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+SITE_URL = 'https://wger-alphas.herokuapp.com'
 
 #
 # Application definition
@@ -146,17 +147,17 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth'
 )
 
-# Google plus authentication tokens
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ['GOOGLE_OAUTH2_KEY']
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ['GOOGLE_OAUTH2_SECRET']
+# # Google plus authentication tokens
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ['GOOGLE_OAUTH2_KEY']
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ['GOOGLE_OAUTH2_SECRET']
 
-# Twitter authentication tokens
-SOCIAL_AUTH_TWITTER_KEY = os.environ['TWITTER_KEY']
-SOCIAL_AUTH_TWITTER_SECRET = os.environ['TWITTER_SECRET']
+# # Twitter authentication tokens
+# SOCIAL_AUTH_TWITTER_KEY = os.environ['TWITTER_KEY']
+# SOCIAL_AUTH_TWITTER_SECRET = os.environ['TWITTER_SECRET']
 
-# Facebook Authentication tokens
-SOCIAL_AUTH_FACEBOOK_KEY = os.environ['FACEBOOK_KEY']
-SOCIAL_AUTH_FACEBOOK_SECRET = os.environ['FACEBOOK_SECRET']
+# # Facebook Authentication tokens
+# SOCIAL_AUTH_FACEBOOK_KEY = os.environ['FACEBOOK_KEY']
+# SOCIAL_AUTH_FACEBOOK_SECRET = os.environ['FACEBOOK_SECRET']
 
 TEMPLATES = [
     {
